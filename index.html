@@ -3,600 +3,683 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Know Your Plate — Protein & Meal Planner</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<title>Know Your Plate — Full Meal Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --green: #2D6A4F;
-  --green-light: #D8F3DC;
-  --green-mid: #52B788;
-  --amber: #E76F00;
-  --amber-light: #FFF3E0;
-  --red-soft: #FFF0F0;
-  --red: #C1121F;
-  --bg: #F7F7F3;
-  --card: #FFFFFF;
-  --border: rgba(0,0,0,0.08);
-  --border-med: rgba(0,0,0,0.13);
-  --text: #1A1A18;
-  --muted: #6B6B67;
-  --faint: #EFEFEB;
-  --breakfast: #FFF8E7;
-  --breakfast-b: #E76F00;
-  --lunch: #F0FBF5;
-  --lunch-b: #2D6A4F;
-  --dinner: #EEF2FF;
-  --dinner-b: #4338CA;
-  --snack: #FDF4FF;
-  --snack-b: #7C3AED;
+:root{
+  --green:#2D6A4F;--green-l:#D8F3DC;--green-m:#52B788;
+  --amber:#E76F00;--amber-l:#FFF3E0;
+  --blue:#1D4ED8;--blue-l:#EEF2FF;
+  --purple:#6D28D9;--purple-l:#F5F3FF;
+  --red:#B91C1C;
+  --bg:#F7F7F3;--card:#fff;
+  --border:rgba(0,0,0,0.08);--border-m:rgba(0,0,0,0.13);
+  --text:#1A1A18;--muted:#6B6B67;--faint:#EFEFEB;
+  --b-col:#E76F00;--l-col:#2D6A4F;--d-col:#4338CA;--s-col:#7C3AED;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 80px; }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:90px;}
+header{background:var(--green);color:white;padding:22px 20px 18px;text-align:center;}
+header h1{font-family:'DM Serif Display',serif;font-size:26px;font-weight:400;}
+header p{font-size:12px;opacity:.7;margin-top:3px;}
+.wrap{max-width:560px;margin:0 auto;padding:0 13px;}
 
-/* HEADER */
-header { background: var(--green); color: white; padding: 24px 20px 20px; text-align: center; }
-header h1 { font-family: 'DM Serif Display', serif; font-size: 26px; font-weight: 400; letter-spacing: -0.3px; }
-header p { font-size: 12px; opacity: 0.7; margin-top: 3px; letter-spacing: 0.02em; }
+/* summary */
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0 10px;}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:11px 12px;}
+.sc-lbl{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.02em;}
+.sc-val{font-size:20px;font-weight:500;line-height:1;}
+.sc-sub{font-size:10px;color:var(--muted);margin-top:2px;}
+.bar{height:5px;background:var(--faint);border-radius:3px;overflow:hidden;margin-top:7px;}
+.bar-f{height:5px;border-radius:3px;transition:width .3s,background .3s;}
 
-.container { max-width: 540px; margin: 0 auto; padding: 0 14px; }
+/* goal */
+.goal-row{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:12px 14px;margin-bottom:11px;display:flex;align-items:center;gap:12px;}
+.goal-row label{font-size:12px;color:var(--muted);white-space:nowrap;}
+.goal-row input[type=range]{flex:1;accent-color:var(--green);}
+.goal-row span{font-size:13px;font-weight:500;color:var(--green);min-width:34px;text-align:right;}
 
-/* SUMMARY STRIP */
-.summary-strip {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-  margin: 16px 0 12px;
-}
-.sum-card {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 14px; padding: 14px 16px;
-}
-.sum-label { font-size: 11px; color: var(--muted); margin-bottom: 4px; letter-spacing: 0.03em; }
-.sum-val { font-size: 22px; font-weight: 500; line-height: 1; }
-.sum-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
-.bar-wrap { height: 6px; background: var(--faint); border-radius: 3px; overflow: hidden; margin-top: 8px; }
-.bar-fill { height: 6px; border-radius: 3px; transition: width 0.3s, background 0.3s; }
+/* mode */
+.mode{display:flex;background:var(--faint);border-radius:11px;padding:3px;margin-bottom:11px;gap:3px;}
+.mbtn{flex:1;padding:8px;border:none;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;background:transparent;color:var(--muted);transition:all .18s;display:flex;align-items:center;justify-content:center;gap:5px;}
+.mbtn.active{background:var(--card);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.1);}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.dg{background:var(--green);}.dr{background:var(--red);}
 
-/* GOAL ROW */
-.goal-row {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 14px; padding: 14px 16px; margin-bottom: 14px;
-  display: flex; align-items: center; gap: 14px;
-}
-.goal-row label { font-size: 12px; color: var(--muted); white-space: nowrap; }
-.goal-row input[type=range] { flex: 1; accent-color: var(--green); }
-.goal-row span { font-size: 13px; font-weight: 500; color: var(--green); min-width: 36px; text-align: right; }
+/* meal tabs */
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:11px;}
+.tab{padding:8px 3px;border:1.5px solid var(--border);border-radius:11px;background:var(--card);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;cursor:pointer;text-align:center;color:var(--muted);transition:all .15s;position:relative;}
+.tab.tb{background:#FFF8E7;border-color:var(--b-col);color:var(--b-col);}
+.tab.tl{background:#F0FBF5;border-color:var(--l-col);color:var(--l-col);}
+.tab.td{background:#EEF2FF;border-color:var(--d-col);color:var(--d-col);}
+.tab.ts{background:#F5F3FF;border-color:var(--s-col);color:var(--s-col);}
+.tab-sub{font-size:10px;font-weight:400;opacity:.8;margin-top:1px;}
+.mdot{width:6px;height:6px;border-radius:50%;position:absolute;top:5px;right:5px;display:none;}
+.mdot.on{display:block;}
 
-/* MODE TOGGLE */
-.mode-toggle {
-  display: flex; background: var(--faint);
-  border-radius: 12px; padding: 4px; margin-bottom: 14px; gap: 4px;
-}
-.mode-btn {
-  flex: 1; padding: 9px 10px; border: none; border-radius: 9px;
-  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
-  cursor: pointer; background: transparent; color: var(--muted);
-  transition: all 0.18s; display: flex; align-items: center; justify-content: center; gap: 6px;
-}
-.mode-btn.active { background: var(--card); color: var(--text); box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
-.dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.dot-g { background: var(--green); }
-.dot-r { background: var(--red); }
+/* meal summary row */
+.msrow{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:11px;}
+.msc{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:7px 5px;text-align:center;}
+.msc-n{font-size:10px;color:var(--muted);margin-bottom:2px;}
+.msc-p{font-size:13px;font-weight:500;}
+.msc-k{font-size:9px;color:var(--muted);margin-top:1px;}
 
-/* MEAL TABS */
-.meal-tabs {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  gap: 6px; margin-bottom: 14px;
-}
-.meal-tab {
-  padding: 9px 4px; border: 1.5px solid var(--border);
-  border-radius: 11px; background: var(--card);
-  font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500;
-  cursor: pointer; text-align: center; transition: all 0.15s; color: var(--muted);
-  position: relative;
-}
-.meal-tab.active-breakfast { background: var(--breakfast); border-color: var(--breakfast-b); color: var(--breakfast-b); }
-.meal-tab.active-lunch    { background: var(--lunch);     border-color: var(--lunch-b);     color: var(--lunch-b); }
-.meal-tab.active-dinner   { background: var(--dinner);    border-color: var(--dinner-b);    color: var(--dinner-b); }
-.meal-tab.active-snack    { background: var(--snack);     border-color: var(--snack-b);     color: var(--snack-b); }
-.meal-tab-sub { font-size: 10px; font-weight: 400; opacity: 0.8; margin-top: 1px; }
-.meal-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  position: absolute; top: 6px; right: 6px;
-  display: none;
-}
-.meal-dot.show { display: block; }
+/* section */
+.sec{margin-bottom:14px;}
+.sec-lbl{font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:0 2px;margin-bottom:5px;}
+.sec-card{background:var(--card);border:1px solid var(--border);border-radius:13px;overflow:hidden;}
 
-/* MEAL PLAN SUMMARY */
-.plan-summary {
-  display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; margin-bottom: 14px;
-}
-.plan-cell {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 10px; padding: 8px 6px; text-align: center;
-}
-.plan-cell-name { font-size: 10px; color: var(--muted); margin-bottom: 3px; }
-.plan-cell-p { font-size: 14px; font-weight: 500; }
-.plan-cell-k { font-size: 10px; color: var(--muted); margin-top: 1px; }
+/* food item */
+.fi{display:flex;align-items:center;gap:7px;padding:9px 11px;border-bottom:1px solid var(--border);transition:background .12s;}
+.fi:last-child{border-bottom:none;}
+.fi.pb{background:#FFF8E7;}.fi.pl{background:#F0FBF5;}.fi.pd{background:#EEF2FF;}.fi.ps{background:#F5F3FF;}
+.fn{flex:1;min-width:0;}
+.fn-t{font-size:12px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.fn-p{font-size:10px;color:var(--muted);margin-top:1px;}
+.fnums{text-align:right;flex-shrink:0;min-width:72px;}
+.fp{font-size:12px;font-weight:500;}
+.fk{font-size:10px;color:var(--muted);margin-top:1px;}
+.ff{font-size:10px;color:var(--green);margin-top:1px;}
+.badge{font-size:10px;padding:2px 6px;border-radius:20px;font-weight:500;white-space:nowrap;flex-shrink:0;}
+.bb{background:var(--green-l);color:var(--green);}
+.bc{background:#EEF2FF;color:#3730A3;}
+.cnt{display:flex;align-items:center;gap:4px;flex-shrink:0;}
+.cb{width:25px;height:25px;border-radius:50%;border:1px solid var(--border-m);background:var(--faint);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif;color:var(--text);transition:background .12s;flex-shrink:0;line-height:1;}
+.cb:active{background:var(--green-l);}
+.cv{font-size:12px;font-weight:500;min-width:14px;text-align:center;}
 
-/* SECTION */
-.section { margin-bottom: 16px; }
-.section-label {
-  font-size: 10px; font-weight: 500; letter-spacing: 0.08em;
-  text-transform: uppercase; color: var(--muted);
-  padding: 0 2px; margin-bottom: 6px;
-}
-.section-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+/* nonveg */
+.nv{display:none;}.nv.on{display:block;}
 
-/* FOOD ITEM */
-.food-item {
-  display: flex; align-items: center; gap: 8px;
-  padding: 10px 12px; border-bottom: 1px solid var(--border);
-  transition: background 0.12s;
-}
-.food-item:last-child { border-bottom: none; }
-.food-item.planned { background: var(--green-light); }
-.food-item.planned.breakfast-planned { background: var(--breakfast); }
-.food-item.planned.lunch-planned    { background: var(--lunch); }
-.food-item.planned.dinner-planned   { background: var(--dinner); }
-.food-item.planned.snack-planned    { background: var(--snack); }
+/* AI custom ingredient */
+.ai-box{background:var(--card);border:1.5px dashed var(--border-m);border-radius:13px;padding:14px;margin-bottom:14px;}
+.ai-title{font-size:13px;font-weight:500;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.ai-badge{font-size:10px;background:var(--purple-l);color:var(--purple);padding:2px 8px;border-radius:20px;font-weight:500;}
+.ai-row{display:flex;gap:8px;margin-bottom:8px;}
+.ai-row input{flex:1;padding:9px 12px;border:1px solid var(--border-m);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);background:var(--faint);outline:none;}
+.ai-row input:focus{border-color:var(--green);background:white;}
+.ai-row input::placeholder{color:var(--muted);}
+.ai-row button{padding:9px 14px;background:var(--green);color:white;border:none;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;}
+.ai-row button:disabled{opacity:.6;cursor:not-allowed;}
+.ai-result{background:var(--faint);border-radius:9px;padding:11px 12px;font-size:12px;display:none;}
+.ai-result.show{display:block;}
+.ai-result-name{font-size:13px;font-weight:500;margin-bottom:6px;}
+.ai-nums{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px;}
+.ai-num{text-align:center;}
+.ai-num-v{font-size:16px;font-weight:500;}
+.ai-num-l{font-size:10px;color:var(--muted);}
+.ai-add-btn{width:100%;padding:8px;background:var(--green);color:white;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;}
+.ai-err{color:var(--red);font-size:12px;padding:8px;display:none;}
+.ai-err.show{display:block;}
+.ai-loading{color:var(--muted);font-size:12px;padding:8px;display:none;}
+.ai-loading.show{display:block;}
 
-.food-name { flex: 1; min-width: 0; }
-.food-name-text { font-size: 13px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.food-portion { font-size: 10px; color: var(--muted); margin-top: 1px; }
+/* custom added items */
+.custom-items{margin-bottom:14px;}
+.custom-item{display:flex;align-items:center;gap:7px;padding:9px 11px;border-bottom:1px solid var(--border);background:var(--purple-l);transition:background .12s;}
+.custom-item:last-child{border-bottom:none;}
+.custom-item.pb{background:#FFF8E7;}.custom-item.pl{background:#F0FBF5;}
+.custom-item.pd{background:#EEF2FF;}.custom-item.ps{background:#F5F3FF;}
 
-.food-nums { text-align: right; flex-shrink: 0; min-width: 62px; }
-.food-protein-val { font-size: 13px; font-weight: 500; color: var(--text); }
-.food-kcal-val { font-size: 10px; color: var(--muted); margin-top: 1px; }
+/* action row */
+.arow{display:flex;justify-content:flex-end;gap:12px;margin-bottom:10px;}
+.tbtn{font-size:12px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:underline;text-underline-offset:2px;}
 
-.badge { font-size: 10px; padding: 2px 7px; border-radius: 20px; font-weight: 500; white-space: nowrap; flex-shrink: 0; }
-.badge-best { background: var(--green-light); color: var(--green); }
-.badge-complete { background: #EEF2FF; color: #3730A3; }
+/* disclaimer */
+.disc{background:var(--amber-l);border-left:3px solid var(--amber);border-radius:0 9px 9px 0;padding:9px 12px;font-size:11px;color:#7A3800;line-height:1.6;margin-bottom:13px;}
 
-.counter { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
-.cnt-btn {
-  width: 26px; height: 26px; border-radius: 50%;
-  border: 1px solid var(--border-med); background: var(--faint);
-  font-size: 16px; cursor: pointer; display: flex; align-items: center;
-  justify-content: center; font-family: 'DM Sans', sans-serif;
-  color: var(--text); transition: background 0.12s; flex-shrink: 0; line-height: 1;
-}
-.cnt-btn:active { background: var(--green-light); }
-.cnt-val { font-size: 13px; font-weight: 500; min-width: 14px; text-align: center; }
+/* tip */
+.tip{background:var(--green-l);border-radius:11px;padding:11px 13px;margin-bottom:80px;font-size:12px;color:var(--green);line-height:1.65;}
 
-/* nonveg hidden */
-.nonveg-section { display: none; }
-.nonveg-section.visible { display: block; }
+/* sticky */
+.sticky{position:fixed;bottom:0;left:0;right:0;background:var(--green);color:white;padding:9px 16px 13px;display:flex;align-items:center;justify-content:space-between;z-index:100;}
+.stl{font-size:11px;opacity:.7;}
+.stn{font-size:21px;font-weight:500;font-family:'DM Serif Display',serif;line-height:1;}
+.stg{font-size:11px;opacity:.65;}
+.str{text-align:right;}
+.stk{font-size:12px;font-weight:500;}
+.stfl{font-size:10px;opacity:.65;margin-top:1px;}
+.spw{width:80px;height:5px;background:rgba(255,255,255,.25);border-radius:3px;overflow:hidden;margin-top:4px;margin-left:auto;}
+.spf{height:5px;border-radius:3px;background:white;transition:width .3s;}
 
-/* DISCLAIMER */
-.disclaimer {
-  background: var(--amber-light); border-left: 3px solid var(--amber);
-  border-radius: 0 10px 10px 0; padding: 10px 12px;
-  font-size: 11px; color: #7A3800; line-height: 1.6; margin-bottom: 14px;
-}
-
-/* STICKY BAR */
-.sticky-bar {
-  position: fixed; bottom: 0; left: 0; right: 0;
-  background: var(--green); color: white;
-  padding: 10px 20px 14px;
-  display: flex; align-items: center; justify-content: space-between; z-index: 100;
-}
-.sticky-left-label { font-size: 11px; opacity: 0.7; }
-.sticky-total { font-size: 22px; font-weight: 500; font-family: 'DM Serif Display', serif; line-height: 1; }
-.sticky-goal-txt { font-size: 12px; opacity: 0.65; }
-.sticky-right { text-align: right; }
-.sticky-kcal { font-size: 13px; font-weight: 500; }
-.sticky-kcal-label { font-size: 10px; opacity: 0.65; margin-top: 2px; }
-.sticky-prog-wrap { width: 90px; height: 5px; background: rgba(255,255,255,0.25); border-radius: 3px; overflow: hidden; margin-top: 5px; margin-left: auto; }
-.sticky-prog-fill { height: 5px; border-radius: 3px; background: white; transition: width 0.3s; }
-
-/* RESET */
-.top-action-row { display: flex; justify-content: flex-end; margin-bottom: 10px; }
-.txt-btn { font-size: 12px; color: var(--muted); background: none; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; text-decoration: underline; text-underline-offset: 2px; }
-
-/* tip box */
-.tip-box {
-  background: var(--green-light); border-radius: 12px;
-  padding: 12px 14px; margin-bottom: 80px;
-  font-size: 12px; color: var(--green); line-height: 1.65;
-}
-.tip-box strong { font-weight: 500; }
+/* category filter pills */
+.cat-pills{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;margin-bottom:11px;scrollbar-width:none;}
+.cat-pills::-webkit-scrollbar{display:none;}
+.cpill{padding:6px 12px;border-radius:20px;border:1px solid var(--border-m);background:var(--card);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;color:var(--muted);transition:all .15s;flex-shrink:0;}
+.cpill.active{background:var(--green);color:white;border-color:var(--green);}
 </style>
 </head>
 <body>
 
 <header>
   <h1>Know Your Plate</h1>
-  <p>Plan your meals · track protein · balance your day</p>
+  <p>Full meal planner · protein · calories · fiber</p>
 </header>
 
-<div class="container">
+<div class="wrap">
 
   <!-- Summary strip -->
-  <div class="summary-strip">
-    <div class="sum-card">
-      <div class="sum-label">Total protein planned</div>
-      <div class="sum-val" id="total-protein">0<span style="font-size:14px;font-weight:400">g</span></div>
-      <div class="sum-sub" id="protein-status">Set your goal below</div>
-      <div class="bar-wrap"><div class="bar-fill" id="protein-bar" style="width:0%;background:var(--green)"></div></div>
+  <div class="summary">
+    <div class="sc">
+      <div class="sc-lbl">Protein</div>
+      <div class="sc-val" id="tot-p">0<span style="font-size:12px;font-weight:400">g</span></div>
+      <div class="sc-sub" id="p-status">Plan your meals</div>
+      <div class="bar"><div class="bar-f" id="p-bar" style="width:0%;background:var(--green)"></div></div>
     </div>
-    <div class="sum-card">
-      <div class="sum-label">Estimated calories</div>
-      <div class="sum-val" id="total-kcal">0<span style="font-size:14px;font-weight:400"> kcal</span></div>
-      <div class="sum-sub" id="kcal-sub">before cooking oil/ghee</div>
-      <div class="bar-wrap"><div class="bar-fill" id="kcal-bar" style="width:0%;background:var(--amber)"></div></div>
+    <div class="sc">
+      <div class="sc-lbl">Calories (est.)</div>
+      <div class="sc-val" id="tot-k" style="font-size:14px">0 kcal</div>
+      <div class="sc-sub">before cooking fat</div>
+      <div class="bar"><div class="bar-f" id="k-bar" style="width:0%;background:var(--amber)"></div></div>
+    </div>
+    <div class="sc">
+      <div class="sc-lbl">Fiber</div>
+      <div class="sc-val" id="tot-f">0<span style="font-size:12px;font-weight:400">g</span></div>
+      <div class="sc-sub">goal: 25–38g/day</div>
+      <div class="bar"><div class="bar-f" id="f-bar" style="width:0%;background:#52B788"></div></div>
     </div>
   </div>
 
   <!-- Goal -->
   <div class="goal-row">
     <label>Protein goal</label>
-    <input type="range" id="goal-slider" min="50" max="150" value="90" step="5" oninput="updateGoal(this.value)">
-    <span id="goal-display">90g</span>
+    <input type="range" id="gslider" min="50" max="150" value="90" step="5" oninput="setGoal(this.value)">
+    <span id="gval">90g</span>
   </div>
 
   <!-- Mode toggle -->
-  <div class="mode-toggle">
-    <button class="mode-btn active" id="btn-veg" onclick="setMode('veg')">
-      <span class="dot dot-g"></span> Vegetarian
-    </button>
-    <button class="mode-btn" id="btn-nonveg" onclick="setMode('nonveg')">
-      <span class="dot dot-r"></span> Non-vegetarian
-    </button>
+  <div class="mode">
+    <button class="mbtn active" id="bveg" onclick="setMode('veg')"><span class="dot dg"></span>Vegetarian</button>
+    <button class="mbtn" id="bnv" onclick="setMode('nonveg')"><span class="dot dr"></span>Non-vegetarian</button>
   </div>
 
   <!-- Meal tabs -->
-  <div class="meal-tabs">
-    <button class="meal-tab active-breakfast" id="tab-breakfast" onclick="setMeal('breakfast')">
-      Breakfast
-      <div class="meal-tab-sub" id="tsub-breakfast">0g</div>
-      <div class="meal-dot show" id="mdot-breakfast" style="background:var(--breakfast-b)"></div>
-    </button>
-    <button class="meal-tab" id="tab-lunch" onclick="setMeal('lunch')">
-      Lunch
-      <div class="meal-tab-sub" id="tsub-lunch">0g</div>
-      <div class="meal-dot" id="mdot-lunch" style="background:var(--lunch-b)"></div>
-    </button>
-    <button class="meal-tab" id="tab-dinner" onclick="setMeal('dinner')">
-      Dinner
-      <div class="meal-tab-sub" id="tsub-dinner">0g</div>
-      <div class="meal-dot" id="mdot-dinner" style="background:var(--dinner-b)"></div>
-    </button>
-    <button class="meal-tab" id="tab-snack" onclick="setMeal('snack')">
-      Snacks
-      <div class="meal-tab-sub" id="tsub-snack">0g</div>
-      <div class="meal-dot" id="mdot-snack" style="background:var(--snack-b)"></div>
-    </button>
+  <div class="tabs">
+    <button class="tab tb" id="tab-b" onclick="setMeal('b')">Breakfast<div class="tab-sub" id="tsub-b">0g</div><div class="mdot on" id="mdot-b" style="background:var(--b-col)"></div></button>
+    <button class="tab" id="tab-l" onclick="setMeal('l')">Lunch<div class="tab-sub" id="tsub-l">0g</div><div class="mdot" id="mdot-l" style="background:var(--l-col)"></div></button>
+    <button class="tab" id="tab-d" onclick="setMeal('d')">Dinner<div class="tab-sub" id="tsub-d">0g</div><div class="mdot" id="mdot-d" style="background:var(--d-col)"></div></button>
+    <button class="tab" id="tab-s" onclick="setMeal('s')">Snacks<div class="tab-sub" id="tsub-s">0g</div><div class="mdot" id="mdot-s" style="background:var(--s-col)"></div></button>
   </div>
 
-  <!-- Per-meal protein mini summary -->
-  <div class="plan-summary">
-    <div class="plan-cell">
-      <div class="plan-cell-name" style="color:var(--breakfast-b)">Breakfast</div>
-      <div class="plan-cell-p" id="ps-breakfast" style="color:var(--breakfast-b)">0g</div>
-      <div class="plan-cell-k" id="pk-breakfast">0 kcal</div>
+  <!-- Meal summary row -->
+  <div class="msrow">
+    <div class="msc"><div class="msc-n" style="color:var(--b-col)">Breakfast</div><div class="msc-p" id="ms-p-b" style="color:var(--b-col)">0g</div><div class="msc-k" id="ms-k-b">0 kcal</div></div>
+    <div class="msc"><div class="msc-n" style="color:var(--l-col)">Lunch</div><div class="msc-p" id="ms-p-l" style="color:var(--l-col)">0g</div><div class="msc-k" id="ms-k-l">0 kcal</div></div>
+    <div class="msc"><div class="msc-n" style="color:var(--d-col)">Dinner</div><div class="msc-p" id="ms-p-d" style="color:var(--d-col)">0g</div><div class="msc-k" id="ms-k-d">0 kcal</div></div>
+    <div class="msc"><div class="msc-n" style="color:var(--s-col)">Snacks</div><div class="msc-p" id="ms-p-s" style="color:var(--s-col)">0g</div><div class="msc-k" id="ms-k-s">0 kcal</div></div>
+  </div>
+
+  <!-- Category filter pills -->
+  <div class="cat-pills">
+    <button class="cpill active" onclick="filterCat('all',this)">All</button>
+    <button class="cpill" onclick="filterCat('breakfast-staples',this)">Breakfast</button>
+    <button class="cpill" onclick="filterCat('roti',this)">Rotis</button>
+    <button class="cpill" onclick="filterCat('rice',this)">Rice</button>
+    <button class="cpill" onclick="filterCat('dal-legumes',this)">Dal & legumes</button>
+    <button class="cpill" onclick="filterCat('dairy',this)">Dairy</button>
+    <button class="cpill" onclick="filterCat('vegetables',this)">Vegetables</button>
+    <button class="cpill" onclick="filterCat('seeds-nuts',this)">Seeds & nuts</button>
+    <button class="cpill" onclick="filterCat('nonveg',this)">Non-veg</button>
+  </div>
+
+  <div class="arow">
+    <button class="tbtn" onclick="resetMeal()">Clear this meal</button>
+    <button class="tbtn" onclick="resetAll()">Reset all</button>
+  </div>
+
+  <!-- AI Custom ingredient -->
+  <div class="ai-box" data-cat="custom">
+    <div class="ai-title">Add any ingredient <span class="ai-badge">AI-powered</span></div>
+    <div class="ai-row">
+      <input type="text" id="ai-input" placeholder="e.g. jowar roti, banana, dal makhani…" onkeydown="if(event.key==='Enter')aiLookup()">
+      <button id="ai-btn" onclick="aiLookup()">Look up</button>
     </div>
-    <div class="plan-cell">
-      <div class="plan-cell-name" style="color:var(--lunch-b)">Lunch</div>
-      <div class="plan-cell-p" id="ps-lunch" style="color:var(--lunch-b)">0g</div>
-      <div class="plan-cell-k" id="pk-lunch">0 kcal</div>
-    </div>
-    <div class="plan-cell">
-      <div class="plan-cell-name" style="color:var(--dinner-b)">Dinner</div>
-      <div class="plan-cell-p" id="ps-dinner" style="color:var(--dinner-b)">0g</div>
-      <div class="plan-cell-k" id="pk-dinner">0 kcal</div>
-    </div>
-    <div class="plan-cell">
-      <div class="plan-cell-name" style="color:var(--snack-b)">Snacks</div>
-      <div class="plan-cell-p" id="ps-snack" style="color:var(--snack-b)">0g</div>
-      <div class="plan-cell-k" id="pk-snack">0 kcal</div>
+    <div class="ai-loading" id="ai-loading">Looking up nutrition data…</div>
+    <div class="ai-err" id="ai-err"></div>
+    <div class="ai-result" id="ai-result">
+      <div class="ai-result-name" id="ai-rname"></div>
+      <div class="ai-nums">
+        <div class="ai-num"><div class="ai-num-v" id="ai-rp">—</div><div class="ai-num-l">protein</div></div>
+        <div class="ai-num"><div class="ai-num-v" id="ai-rk">—</div><div class="ai-num-l">calories</div></div>
+        <div class="ai-num"><div class="ai-num-v" id="ai-rf">—</div><div class="ai-num-l">fiber</div></div>
+        <div class="ai-num"><div class="ai-num-v" id="ai-rportion" style="font-size:12px">—</div><div class="ai-num-l">per portion</div></div>
+      </div>
+      <button class="ai-add-btn" onclick="addCustom()">+ Add to this meal</button>
     </div>
   </div>
 
-  <div class="top-action-row">
-    <button class="txt-btn" onclick="resetMeal()">Clear this meal</button>
-    &nbsp;
-    <button class="txt-btn" onclick="resetAll()">Reset all</button>
+  <!-- Custom added items section (populated by JS) -->
+  <div id="custom-sec" class="sec" style="display:none">
+    <div class="sec-lbl">Your added ingredients</div>
+    <div class="sec-card" id="custom-card"></div>
+  </div>
+
+  <!-- BREAKFAST STAPLES -->
+  <div class="sec" data-cat="breakfast-staples">
+    <div class="sec-lbl">Breakfast staples</div>
+    <div class="sec-card">
+      <div class="fi" id="fi_idli"><div class="fn"><div class="fn-t">Idli (steamed)</div><div class="fn-p">2 pieces (80g)</div></div><div class="fnums"><div class="fp">4g protein</div><div class="fk">90–110 kcal</div><div class="ff">1–2g fiber</div></div><div class="cnt"><button class="cb" onclick="add('idli',-1)">−</button><span class="cv" id="cv_idli">0</span><button class="cb" onclick="add('idli',1)">+</button></div></div>
+      <div class="fi" id="fi_dosa"><div class="fn"><div class="fn-t">Plain dosa</div><div class="fn-p">1 medium dosa (80g)</div></div><div class="fnums"><div class="fp">4g protein</div><div class="fk">110–160 kcal</div><div class="ff">1–2g fiber</div></div><div class="cnt"><button class="cb" onclick="add('dosa',-1)">−</button><span class="cv" id="cv_dosa">0</span><button class="cb" onclick="add('dosa',1)">+</button></div></div>
+      <div class="fi" id="fi_upma"><div class="fn"><div class="fn-t">Upma (semolina)</div><div class="fn-p">1 katori (150g)</div></div><div class="fnums"><div class="fp">5g protein</div><div class="fk">180–230 kcal</div><div class="ff">2–3g fiber</div></div><div class="cnt"><button class="cb" onclick="add('upma',-1)">−</button><span class="cv" id="cv_upma">0</span><button class="cb" onclick="add('upma',1)">+</button></div></div>
+      <div class="fi" id="fi_poha"><div class="fn"><div class="fn-t">Poha (cooked)</div><div class="fn-p">1 katori (150g)</div></div><div class="fnums"><div class="fp">4g protein</div><div class="fk">160–200 kcal</div><div class="ff">2–3g fiber</div></div><div class="cnt"><button class="cb" onclick="add('poha',-1)">−</button><span class="cv" id="cv_poha">0</span><button class="cb" onclick="add('poha',1)">+</button></div></div>
+      <div class="fi" id="fi_paratha"><div class="fn"><div class="fn-t">Plain paratha (wheat)</div><div class="fn-p">1 paratha (60g)</div></div><div class="fnums"><div class="fp">4g protein</div><div class="fk">180–240 kcal</div><div class="ff">2–3g fiber</div></div><div class="cnt"><button class="cb" onclick="add('paratha',-1)">−</button><span class="cv" id="cv_paratha">0</span><button class="cb" onclick="add('paratha',1)">+</button></div></div>
+      <div class="fi" id="fi_oats"><div class="fn"><div class="fn-t">Oats (rolled, dry)</div><div class="fn-p">½ cup dry (40g)</div></div><span class="badge bb">best</span><div class="fnums"><div class="fp">6g protein</div><div class="fk">145–160 kcal</div><div class="ff">4–5g fiber</div></div><div class="cnt"><button class="cb" onclick="add('oats',-1)">−</button><span class="cv" id="cv_oats">0</span><button class="cb" onclick="add('oats',1)">+</button></div></div>
+      <div class="fi" id="fi_besan_chilla"><div class="fn"><div class="fn-t">Besan chilla</div><div class="fn-p">2 chillas (60g besan)</div></div><span class="badge bb">best</span><div class="fnums"><div class="fp">12g protein</div><div class="fk">200–260 kcal</div><div class="ff">4–5g fiber</div></div><div class="cnt"><button class="cb" onclick="add('besan_chilla',-1)">−</button><span class="cv" id="cv_besan_chilla">0</span><button class="cb" onclick="add('besan_chilla',1)">+</button></div></div>
+    </div>
+  </div>
+
+  <!-- ROTIS -->
+  <div class="sec" data-cat="roti">
+    <div class="sec-lbl">Rotis by flour type (per roti)</div>
+    <div class="sec-card">
+      <div class="fi" id="fi_wheat_roti"><div class="fn"><div class="fn-t">Wheat roti (atta)</div><div class="fn-p">1 medium roti (30g)</div></div><div class="fnums"><div class="fp">3g protein</div><div class="fk">70–90 kcal</div><div class="ff">1–2g fiber</div></div><div class="cnt"><button class="cb" onclick="add('wheat_roti',-1)">−</button><span class="cv" id="cv_wheat_roti">0</span><button class="cb" onclick="add('wheat_roti',1)">+</button></div></div>
+      <div class="fi" id="fi_jowar_roti"><div class="fn"><div class="fn-t">Jowar roti (sorghum)</div><div class="fn-p">1 medium roti (40g)</div></div><span class="badge bb">best</span><div class="fnums"><div class="fp">4g protein</div><div class="fk">90–110 kcal</div><div class="ff">2–3g fiber</div></div><div class="cnt"><button class="cb" onclick="add('jowar_roti',-1)">−</button><span class="cv" id="cv_jowar_roti">0</span><button class="cb" onclick="add('jowar_roti',1)">+</button></div></div>
+      <div class="fi" id="fi_bajra_roti"><div class="fn"><div class="fn-t">Bajra roti (pearl millet)</div><div class="fn-p">1 medium roti (40g)</div></div><div class="fnums"><div class="fp">4g protein</div><div class="fk">95–115 kcal</div><div class="ff">2–3g fiber</div></div><div class="cnt"><button class="cb" onclick="add('bajra_roti',-1)">−</button><span class="cv" id="cv_bajra_roti">0</span><button class="cb" onclick="add('bajra_roti',1)">+</button></div></div>
+      <div class="fi" id="fi_ragi_roti"><div class="fn"><div class="fn-t">Ragi roti (finger millet)</div><div class="fn-p">1 medium roti (40g)</div></div><span class="badge bb">best</span><div class="fnums"><div class="fp">4g protein</div><div class="fk">90–110 kcal</div><div class="ff">3–4g fiber</div></div><div class="cnt"><button class="cb" onclick="add('ragi_roti',-1)">−</button><span class="cv" id="cv_ragi_roti">0</span><button class="cb" onclick="add('ragi_roti',1)">+</button></div></div>
+      <div class="fi" id="fi_multigrain_roti"><div class="fn"><div class="fn-t">Multigrain roti</div><div class="fn-p">1 medium roti (35g)</div></div><div class="fnums"><div class="fp">4g protein</div><div class="fk">85–105 kcal</div><div class="ff">2–3g fiber</div></div><div class="cnt"><button class="cb" onclick="add('multigrain_roti',-1)">−</button><span class="cv" id="cv_multigrain_roti">0</span><button class="cb" onclick="add('multigrain_roti',1)">+</button></div></div>
+      <div class="fi" id="fi_besan_roti"><div class="fn"><div class="fn-t">Besan roti (chickpea flour)</div><div class="fn-p">1 medium roti (40g)</div></div><span class="badge bb">best</span><div class="fnums"><div class="fp">6g protein</div><div class="fk">120–145 kcal</div><div class="ff">3–4g fiber</div></div><div class="cnt"><button class="cb" onclick="add('besan_roti',-1)">−</button><span class="cv" id="cv_besan_roti">0</span><button class="cb" onclick="add('besan_roti',1)">+</button></div></div>
+    </div>
+  </div>
+
+  <!-- RICE -->
+  <div class="sec" data-cat="rice">
+    <div class="sec-lbl">Rice & rice-based (cooked)</div>
+    <div class="sec-card">
+      <div class="fi" id="fi_white_rice"><div class="fn"><div class="fn-t">White rice (cooked)</div><div class="fn-p">1 katori (150g cooked)</div></div><div class="fnums"><div class="fp">4g protein</div><div class="fk">180–210 kcal</div><div class="ff">0–1g fiber</div></div><div class="cnt"><button class="cb" onclick="add('white_rice',-1)">−</button><span class="cv" id="cv_white_rice">0</span><button class="cb" onclick="add('white_rice',1)">+</button></div></div>
+      <div class="fi" id="fi_brown_rice"><div class="fn"><div class="fn-t">Brown rice (cooked)</div><div class="fn-p">1 katori (150g cooked)</div></div><span class="badge bb">best</span><div class="fnums"><div class="fp">5g protein</div><div class="fk">170–200 kcal</div><div class="ff">2–3g fiber</div></div><div class="cnt"><button class="cb" onclick="add('brown_rice',-1)">−</button><span class="cv" id="cv_brown_rice">0</span><button class="cb" onclick="add('brown_rice',1)">+</button></div></div>
+      <div class="fi" id="fi_red_rice"><div class="fn"><div class="fn-t">Red rice (cooked)</div><div class="fn-p">1 katori (150g cooked)</div></div><div class="fnums"><div class="fp">5g protein</div><div class="fk">165–195 kcal</div><div class="ff">2–3g fiber</div></div><div class="cnt"><button class="cb" onclick="add('red_rice',-1)">−</button><span class="cv" id="cv_red_rice">0</span><button class="cb" onclick="add('red_rice',1)">+</button></div></div>
+      <div class="fi" id="fi_poha_rice"><div class="fn"><div class="fn-t">Poha / flattened rice (dry)</div><div class="fn-p">½ cup dry (40g)</div></div><div class="fnums"><div class="fp">3g protein</div><div class="fk">140–160 kcal</div><div class="ff">1–2g fiber</div></div><div class="cnt"><button class="cb" onclick="add('poha_rice',-1)">−</button><span class="cv" id="cv_poha_rice">0</span><button class="cb" onclick="add('poha_rice',1)">+</button></div></div>
+      <div class="fi" id="fi_khichdi"><div class="fn"><div class="fn-t">Khichdi (rice + dal)</div><div class="fn-p">1 katori (200g)</div></div><span class="badge bb">best</span><div class="fnums"><div class="fp">9g protein</div><div class="fk">200–260 kcal</div><div class="ff">3–5g fiber</div></div><div class="cnt"><button class="cb" onclick="add('khichdi',-1)">−</button><span class="cv" id="cv_khichdi">0</span><button class="cb" onclick="add('khichdi',1)">+</button></div></div>
+      <div class="fi" id="fi_quinoa"><div class="fn"><div class="fn-t">Quinoa (cooked)</div><div class="fn-p">1 katori (150g cooked)</div></div><span class="badge bc">complete</span><div class="fnums"><div class="fp">8g protein</div><div class="fk">180–220 kcal</div><div class="ff">3–4g fiber</div></div><div class="cnt"><button class="cb" onclick="add('quinoa',-1)">−</button><span class="cv" id="cv_quinoa">0</span><button class="cb" onclick="add('quinoa',1)">+</button></div></div>
+    </div>
+  </div>
+
+  <!-- DAL & LEGUMES -->
+  <div class="sec" data-cat="dal-legumes">
+    <div class="sec-lbl">Dal & legumes (cooked)</div>
+    <div class="sec-card">
+      <div class="fi" id="fi_soya"><div class="fn"><div class="fn-t">Soya chunks / nutrela</div><div class="fn-p">½ cup dry (30g) — triples when soaked</div></div><span class="badge bb">best</span><div class="fnums"><div class="fp">15g protein</div><div class="fk">100–140 kcal</div><div class="ff">2–3g fiber</div></div><div class="cnt"><button class="cb" onclick="add('soya',-1)">−</button><span class="cv" id="cv_soya">0</span><button class="cb" onclick="add('soya',1)">+</button></div></div>
+      <div class="fi" id="fi_channadal"><div class="fn"><div class="fn-t">Chana dal (cooked)</div><div class="fn-p">1 katori / 1 cup</div></div><div class="fnums"><div class="fp">14g protein</div><div class="fk">190–260 kcal</div><div class="ff">6–8g fiber</div></div><div class="cnt"><button class="cb" onclick="add('channadal',-1)">−</button><span class="cv" id="cv_channadal">0</span><button class="cb" onclick="add('channadal',1)">+</button></div></div>
+      <div class="fi" id="fi_rajma"><div class="fn"><div class="fn-t">Rajma / kidney beans</div><div class="fn-p">1 katori / 1 cup</div></div><div class="fnums"><div class="fp">13g protein</div><div class="fk">180–250 kcal</div><div class="ff">7–9g fiber</div></div><div class="cnt"><button class="cb" onclick="add('rajma',-1)">−</button><span class="cv" id="cv_rajma">0</span><button class="cb" onclick="add('rajma',1)">+</button></div></div>
+      <div class="fi" id="fi_chana"><div class="fn"><div class="fn-t">Kala / kabuli chana</div><div class="fn-p">1 katori / 1 cup</div></div><div class="fnums"><div class="fp">12g protein</div><div class="fk">160–230 kcal</div><div class="ff">8–10g fiber</div></div><div class="cnt"><button class="cb" onclick="add('chana',-1)">−</button><span class="cv" id="cv_chana">0</span><button class="cb" onclick="add('chana',1)">+</button></div></div>
+      <div class="fi" id="fi_moongdal"><div class="fn"><div class="fn-t">Moong dal (cooked)</div><div class="fn-p">1 katori / 1 cup</div></div><div class="fnums"><div class="fp">12g protein</div><div class="fk">150–210 kcal</div><div class="ff">5–7g fiber</div></div><div class="cnt"><button class="cb" onclick="add('moongdal',-1)">−</button><span class="cv" id="cv_moongdal">0</span><button class="cb" onclick="add('moongdal',1)">+</button></div></div>
+      <div class="fi" id="fi_masoor"><div class="fn"><div class="fn-t">Masoor dal (cooked)</div><div class="fn-p">1 katori / 1 cup</div></div><div class="fnums"><div class="fp">12g protein</div><div class="fk">150–210 kcal</div><div class="ff">5–7g fiber</div></div><div class="cnt"><button class="cb" onclick="add('masoor',-1)">−</button><span class="cv" id="cv_masoor">0</span><button class="cb" onclick="add('masoor',1)">+</button></div></div>
+      <div class="fi" id="fi_tofu"><div class="fn"><div class="fn-t">Tofu (firm)</div><div class="fn-p">100g — ⅔ cup cubed</div></div><div class="fnums"><div class="fp">10g protein</div><div class="fk">70–120 kcal</div><div class="ff">0–1g fiber</div></div><div class="cnt"><button class="cb" onclick="add('tofu',-1)">−</button><span class="cv" id="cv_tofu">0</span><button class="cb" onclick="add('tofu',1)">+</button></div></div>
+      <div class="fi" id="fi_sprouts"><div class="fn"><div class="fn-t">Sprouted moong (raw)</div><div class="fn-p">1 cup / 1 small bowl</div></div><div class="fnums"><div class="fp">7g protein</div><div class="fk">50–70 kcal</div><div class="ff">2–3g fiber</div></div><div class="cnt"><button class="cb" onclick="add('sprouts',-1)">−</button><span class="cv" id="cv_sprouts">0</span><button class="cb" onclick="add('sprouts',1)">+</button></div></div>
+    </div>
   </div>
 
   <!-- DAIRY -->
-  <div class="section">
-    <div class="section-label">Dairy</div>
-    <div class="section-card">
-      <div class="food-item" id="fi_paneer"><div class="food-name"><div class="food-name-text">Paneer</div><div class="food-portion">100g — ½ cup cubed / 4–5 pieces</div></div><span class="badge badge-best">best</span><div class="food-nums"><div class="food-protein-val">18g protein</div><div class="food-kcal-val">265–330 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('paneer',-1)">−</button><span class="cnt-val" id="cv_paneer">0</span><button class="cnt-btn" onclick="add('paneer',1)">+</button></div></div>
-      <div class="food-item" id="fi_greek"><div class="food-name"><div class="food-name-text">Greek yogurt / hung curd</div><div class="food-portion">100g — ½ cup / 1 small bowl</div></div><span class="badge badge-best">best</span><div class="food-nums"><div class="food-protein-val">10g protein</div><div class="food-kcal-val">60–90 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('greek',-1)">−</button><span class="cnt-val" id="cv_greek">0</span><button class="cnt-btn" onclick="add('greek',1)">+</button></div></div>
-      <div class="food-item" id="fi_milk"><div class="food-name"><div class="food-name-text">Toned / skimmed milk</div><div class="food-portion">1 glass — 250ml</div></div><div class="food-nums"><div class="food-protein-val">8g protein</div><div class="food-kcal-val">85–120 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('milk',-1)">−</button><span class="cnt-val" id="cv_milk">0</span><button class="cnt-btn" onclick="add('milk',1)">+</button></div></div>
-      <div class="food-item" id="fi_chena"><div class="food-name"><div class="food-name-text">Low-fat chena / cottage cheese</div><div class="food-portion">100g — ½ cup</div></div><div class="food-nums"><div class="food-protein-val">11g protein</div><div class="food-kcal-val">70–100 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('chena',-1)">−</button><span class="cnt-val" id="cv_chena">0</span><button class="cnt-btn" onclick="add('chena',1)">+</button></div></div>
+  <div class="sec" data-cat="dairy">
+    <div class="sec-lbl">Dairy</div>
+    <div class="sec-card">
+      <div class="fi" id="fi_paneer"><div class="fn"><div class="fn-t">Paneer</div><div class="fn-p">100g — ½ cup cubed / 4–5 pieces</div></div><span class="badge bb">best</span><div class="fnums"><div class="fp">18g protein</div><div class="fk">265–330 kcal</div><div class="ff">0g fiber</div></div><div class="cnt"><button class="cb" onclick="add('paneer',-1)">−</button><span class="cv" id="cv_paneer">0</span><button class="cb" onclick="add('paneer',1)">+</button></div></div>
+      <div class="fi" id="fi_greek"><div class="fn"><div class="fn-t">Greek yogurt / hung curd</div><div class="fn-p">100g — ½ cup</div></div><span class="badge bb">best</span><div class="fnums"><div class="fp">10g protein</div><div class="fk">60–90 kcal</div><div class="ff">0g fiber</div></div><div class="cnt"><button class="cb" onclick="add('greek',-1)">−</button><span class="cv" id="cv_greek">0</span><button class="cb" onclick="add('greek',1)">+</button></div></div>
+      <div class="fi" id="fi_milk"><div class="fn"><div class="fn-t">Toned / skimmed milk</div><div class="fn-p">1 glass (250ml)</div></div><div class="fnums"><div class="fp">8g protein</div><div class="fk">85–120 kcal</div><div class="ff">0g fiber</div></div><div class="cnt"><button class="cb" onclick="add('milk',-1)">−</button><span class="cv" id="cv_milk">0</span><button class="cb" onclick="add('milk',1)">+</button></div></div>
+      <div class="fi" id="fi_chena"><div class="fn"><div class="fn-t">Low-fat chena / cottage cheese</div><div class="fn-p">100g — ½ cup</div></div><div class="fnums"><div class="fp">11g protein</div><div class="fk">70–100 kcal</div><div class="ff">0g fiber</div></div><div class="cnt"><button class="cb" onclick="add('chena',-1)">−</button><span class="cv" id="cv_chena">0</span><button class="cb" onclick="add('chena',1)">+</button></div></div>
     </div>
   </div>
 
-  <!-- LEGUMES -->
-  <div class="section">
-    <div class="section-label">Legumes & pulses (cooked)</div>
-    <div class="section-card">
-      <div class="food-item" id="fi_soya"><div class="food-name"><div class="food-name-text">Soya chunks / nutrela</div><div class="food-portion">½ cup dry (30g) — triples when soaked</div></div><span class="badge badge-best">best</span><div class="food-nums"><div class="food-protein-val">15g protein</div><div class="food-kcal-val">100–140 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('soya',-1)">−</button><span class="cnt-val" id="cv_soya">0</span><button class="cnt-btn" onclick="add('soya',1)">+</button></div></div>
-      <div class="food-item" id="fi_channadal"><div class="food-name"><div class="food-name-text">Chana dal (cooked)</div><div class="food-portion">1 katori / 1 cup</div></div><div class="food-nums"><div class="food-protein-val">14g protein</div><div class="food-kcal-val">190–260 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('channadal',-1)">−</button><span class="cnt-val" id="cv_channadal">0</span><button class="cnt-btn" onclick="add('channadal',1)">+</button></div></div>
-      <div class="food-item" id="fi_rajma"><div class="food-name"><div class="food-name-text">Rajma / kidney beans (cooked)</div><div class="food-portion">1 katori / 1 cup</div></div><div class="food-nums"><div class="food-protein-val">13g protein</div><div class="food-kcal-val">180–250 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('rajma',-1)">−</button><span class="cnt-val" id="cv_rajma">0</span><button class="cnt-btn" onclick="add('rajma',1)">+</button></div></div>
-      <div class="food-item" id="fi_chana"><div class="food-name"><div class="food-name-text">Kala / kabuli chana (cooked)</div><div class="food-portion">1 katori / 1 cup</div></div><div class="food-nums"><div class="food-protein-val">12g protein</div><div class="food-kcal-val">160–230 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('chana',-1)">−</button><span class="cnt-val" id="cv_chana">0</span><button class="cnt-btn" onclick="add('chana',1)">+</button></div></div>
-      <div class="food-item" id="fi_moongdal"><div class="food-name"><div class="food-name-text">Moong dal (cooked)</div><div class="food-portion">1 katori / 1 cup</div></div><div class="food-nums"><div class="food-protein-val">12g protein</div><div class="food-kcal-val">150–210 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('moongdal',-1)">−</button><span class="cnt-val" id="cv_moongdal">0</span><button class="cnt-btn" onclick="add('moongdal',1)">+</button></div></div>
-      <div class="food-item" id="fi_masoor"><div class="food-name"><div class="food-name-text">Masoor dal (cooked)</div><div class="food-portion">1 katori / 1 cup</div></div><div class="food-nums"><div class="food-protein-val">12g protein</div><div class="food-kcal-val">150–210 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('masoor',-1)">−</button><span class="cnt-val" id="cv_masoor">0</span><button class="cnt-btn" onclick="add('masoor',1)">+</button></div></div>
-      <div class="food-item" id="fi_tofu"><div class="food-name"><div class="food-name-text">Tofu (firm)</div><div class="food-portion">100g — ⅔ cup cubed</div></div><div class="food-nums"><div class="food-protein-val">10g protein</div><div class="food-kcal-val">70–120 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('tofu',-1)">−</button><span class="cnt-val" id="cv_tofu">0</span><button class="cnt-btn" onclick="add('tofu',1)">+</button></div></div>
-      <div class="food-item" id="fi_sprouts"><div class="food-name"><div class="food-name-text">Sprouted moong (raw)</div><div class="food-portion">1 cup / 1 small bowl</div></div><div class="food-nums"><div class="food-protein-val">7g protein</div><div class="food-kcal-val">50–70 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('sprouts',-1)">−</button><span class="cnt-val" id="cv_sprouts">0</span><button class="cnt-btn" onclick="add('sprouts',1)">+</button></div></div>
+  <!-- VEGETABLES -->
+  <div class="sec" data-cat="vegetables">
+    <div class="sec-lbl">Vegetables (cooked, 1 katori ~100g)</div>
+    <div class="sec-card">
+      <div class="fi" id="fi_palak"><div class="fn"><div class="fn-t">Palak / spinach (cooked)</div><div class="fn-p">1 katori (100g)</div></div><span class="badge bb">best</span><div class="fnums"><div class="fp">3g protein</div><div class="fk">20–35 kcal</div><div class="ff">2–3g fiber</div></div><div class="cnt"><button class="cb" onclick="add('palak',-1)">−</button><span class="cv" id="cv_palak">0</span><button class="cb" onclick="add('palak',1)">+</button></div></div>
+      <div class="fi" id="fi_gobi"><div class="fn"><div class="fn-t">Gobi / cauliflower (cooked)</div><div class="fn-p">1 katori (100g)</div></div><div class="fnums"><div class="fp">2g protein</div><div class="fk">25–60 kcal</div><div class="ff">2–3g fiber</div></div><div class="cnt"><button class="cb" onclick="add('gobi',-1)">−</button><span class="cv" id="cv_gobi">0</span><button class="cb" onclick="add('gobi',1)">+</button></div></div>
+      <div class="fi" id="fi_bhindi"><div class="fn"><div class="fn-t">Bhindi / okra (cooked)</div><div class="fn-p">1 katori (100g)</div></div><div class="fnums"><div class="fp">2g protein</div><div class="fk">30–70 kcal</div><div class="ff">3–4g fiber</div></div><div class="cnt"><button class="cb" onclick="add('bhindi',-1)">−</button><span class="cv" id="cv_bhindi">0</span><button class="cb" onclick="add('bhindi',1)">+</button></div></div>
+      <div class="fi" id="fi_gajar"><div class="fn"><div class="fn-t">Gajar / carrot (raw or cooked)</div><div class="fn-p">1 medium / 1 katori (100g)</div></div><div class="fnums"><div class="fp">1g protein</div><div class="fk">35–50 kcal</div><div class="ff">2–3g fiber</div></div><div class="cnt"><button class="cb" onclick="add('gajar',-1)">−</button><span class="cv" id="cv_gajar">0</span><button class="cb" onclick="add('gajar',1)">+</button></div></div>
+      <div class="fi" id="fi_lauki"><div class="fn"><div class="fn-t">Lauki / bottle gourd (cooked)</div><div class="fn-p">1 katori (100g)</div></div><div class="fnums"><div class="fp">1g protein</div><div class="fk">15–30 kcal</div><div class="ff">1–2g fiber</div></div><div class="cnt"><button class="cb" onclick="add('lauki',-1)">−</button><span class="cv" id="cv_lauki">0</span><button class="cb" onclick="add('lauki',1)">+</button></div></div>
+      <div class="fi" id="fi_brinjal"><div class="fn"><div class="fn-t">Brinjal / baingan (cooked)</div><div class="fn-p">1 katori (100g)</div></div><div class="fnums"><div class="fp">1g protein</div><div class="fk">25–55 kcal</div><div class="ff">2–3g fiber</div></div><div class="cnt"><button class="cb" onclick="add('brinjal',-1)">−</button><span class="cv" id="cv_brinjal">0</span><button class="cb" onclick="add('brinjal',1)">+</button></div></div>
+      <div class="fi" id="fi_methi"><div class="fn"><div class="fn-t">Methi / fenugreek leaves (cooked)</div><div class="fn-p">1 katori (100g)</div></div><div class="fnums"><div class="fp">4g protein</div><div class="fk">35–50 kcal</div><div class="ff">3–4g fiber</div></div><div class="cnt"><button class="cb" onclick="add('methi',-1)">−</button><span class="cv" id="cv_methi">0</span><button class="cb" onclick="add('methi',1)">+</button></div></div>
+      <div class="fi" id="fi_matar"><div class="fn"><div class="fn-t">Matar / green peas (cooked)</div><div class="fn-p">½ katori (75g)</div></div><span class="badge bb">best</span><div class="fnums"><div class="fp">5g protein</div><div class="fk">55–75 kcal</div><div class="ff">4–5g fiber</div></div><div class="cnt"><button class="cb" onclick="add('matar',-1)">−</button><span class="cv" id="cv_matar">0</span><button class="cb" onclick="add('matar',1)">+</button></div></div>
     </div>
   </div>
 
-  <!-- SEEDS — great for topping / boosting -->
-  <div class="section">
-    <div class="section-label">Seeds — add as toppings to boost protein</div>
-    <div class="section-card">
-      <div class="food-item" id="fi_hemp"><div class="food-name"><div class="food-name-text">Hemp seeds</div><div class="food-portion">3 tbsp (30g) — sprinkle on yogurt / smoothie</div></div><span class="badge badge-best">best</span><div class="food-nums"><div class="food-protein-val">10g protein</div><div class="food-kcal-val">155–175 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('hemp',-1)">−</button><span class="cnt-val" id="cv_hemp">0</span><button class="cnt-btn" onclick="add('hemp',1)">+</button></div></div>
-      <div class="food-item" id="fi_pumpkin"><div class="food-name"><div class="food-name-text">Pumpkin seeds</div><div class="food-portion">2 tbsp (20g) — on salads / yogurt</div></div><div class="food-nums"><div class="food-protein-val">5g protein</div><div class="food-kcal-val">110–125 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('pumpkin',-1)">−</button><span class="cnt-val" id="cv_pumpkin">0</span><button class="cnt-btn" onclick="add('pumpkin',1)">+</button></div></div>
-      <div class="food-item" id="fi_flax"><div class="food-name"><div class="food-name-text">Flaxseeds / alsi</div><div class="food-portion">2 tbsp (20g) — in roti dough / smoothie</div></div><div class="food-nums"><div class="food-protein-val">4g protein</div><div class="food-kcal-val">100–110 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('flax',-1)">−</button><span class="cnt-val" id="cv_flax">0</span><button class="cnt-btn" onclick="add('flax',1)">+</button></div></div>
-      <div class="food-item" id="fi_chia"><div class="food-name"><div class="food-name-text">Chia seeds</div><div class="food-portion">2 tbsp (20g) — in dahi / water / smoothie</div></div><div class="food-nums"><div class="food-protein-val">3g protein</div><div class="food-kcal-val">95–100 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('chia',-1)">−</button><span class="cnt-val" id="cv_chia">0</span><button class="cnt-btn" onclick="add('chia',1)">+</button></div></div>
-    </div>
-  </div>
-
-  <!-- NUTS -->
-  <div class="section">
-    <div class="section-label">Nuts & nut butters</div>
-    <div class="section-card">
-      <div class="food-item" id="fi_peanuts"><div class="food-name"><div class="food-name-text">Peanuts / roasted chana</div><div class="food-portion">small handful (30g / ~25 peanuts)</div></div><div class="food-nums"><div class="food-protein-val">8g protein</div><div class="food-kcal-val">160–175 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('peanuts',-1)">−</button><span class="cnt-val" id="cv_peanuts">0</span><button class="cnt-btn" onclick="add('peanuts',1)">+</button></div></div>
-      <div class="food-item" id="fi_pb"><div class="food-name"><div class="food-name-text">Peanut butter (natural, no sugar)</div><div class="food-portion">2 tbsp (32g)</div></div><div class="food-nums"><div class="food-protein-val">8g protein</div><div class="food-kcal-val">185–200 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('pb',-1)">−</button><span class="cnt-val" id="cv_pb">0</span><button class="cnt-btn" onclick="add('pb',1)">+</button></div></div>
-      <div class="food-item" id="fi_almonds"><div class="food-name"><div class="food-name-text">Almonds</div><div class="food-portion">small handful (30g / ~20 almonds)</div></div><div class="food-nums"><div class="food-protein-val">6g protein</div><div class="food-kcal-val">170–180 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('almonds',-1)">−</button><span class="cnt-val" id="cv_almonds">0</span><button class="cnt-btn" onclick="add('almonds',1)">+</button></div></div>
-    </div>
-  </div>
-
-  <!-- GRAINS -->
-  <div class="section">
-    <div class="section-label">Grains & flour</div>
-    <div class="section-card">
-      <div class="food-item" id="fi_quinoa"><div class="food-name"><div class="food-name-text">Quinoa (cooked)</div><div class="food-portion">1 cup / 1 katori</div></div><span class="badge badge-complete">complete</span><div class="food-nums"><div class="food-protein-val">8g protein</div><div class="food-kcal-val">180–220 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('quinoa',-1)">−</button><span class="cnt-val" id="cv_quinoa">0</span><button class="cnt-btn" onclick="add('quinoa',1)">+</button></div></div>
-      <div class="food-item" id="fi_oats"><div class="food-name"><div class="food-name-text">Oats (rolled, dry)</div><div class="food-portion">½ cup dry (40g) — 1 standard bowl</div></div><div class="food-nums"><div class="food-protein-val">6g protein</div><div class="food-kcal-val">145–160 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('oats',-1)">−</button><span class="cnt-val" id="cv_oats">0</span><button class="cnt-btn" onclick="add('oats',1)">+</button></div></div>
-      <div class="food-item" id="fi_besan"><div class="food-name"><div class="food-name-text">Besan / chickpea flour</div><div class="food-portion">¼ cup (30g) — 2–3 chillas</div></div><div class="food-nums"><div class="food-protein-val">6g protein</div><div class="food-kcal-val">110–130 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('besan',-1)">−</button><span class="cnt-val" id="cv_besan">0</span><button class="cnt-btn" onclick="add('besan',1)">+</button></div></div>
+  <!-- SEEDS & NUTS -->
+  <div class="sec" data-cat="seeds-nuts">
+    <div class="sec-lbl">Seeds — add as toppings to boost protein</div>
+    <div class="sec-card">
+      <div class="fi" id="fi_hemp"><div class="fn"><div class="fn-t">Hemp seeds</div><div class="fn-p">3 tbsp (30g) — on yogurt / smoothie</div></div><span class="badge bb">best</span><div class="fnums"><div class="fp">10g protein</div><div class="fk">155–175 kcal</div><div class="ff">1–2g fiber</div></div><div class="cnt"><button class="cb" onclick="add('hemp',-1)">−</button><span class="cv" id="cv_hemp">0</span><button class="cb" onclick="add('hemp',1)">+</button></div></div>
+      <div class="fi" id="fi_pumpkin"><div class="fn"><div class="fn-t">Pumpkin seeds</div><div class="fn-p">2 tbsp (20g)</div></div><div class="fnums"><div class="fp">5g protein</div><div class="fk">110–125 kcal</div><div class="ff">1g fiber</div></div><div class="cnt"><button class="cb" onclick="add('pumpkin',-1)">−</button><span class="cv" id="cv_pumpkin">0</span><button class="cb" onclick="add('pumpkin',1)">+</button></div></div>
+      <div class="fi" id="fi_flax"><div class="fn"><div class="fn-t">Flaxseeds / alsi</div><div class="fn-p">2 tbsp (20g)</div></div><div class="fnums"><div class="fp">4g protein</div><div class="fk">100–110 kcal</div><div class="ff">5–6g fiber</div></div><div class="cnt"><button class="cb" onclick="add('flax',-1)">−</button><span class="cv" id="cv_flax">0</span><button class="cb" onclick="add('flax',1)">+</button></div></div>
+      <div class="fi" id="fi_chia"><div class="fn"><div class="fn-t">Chia seeds</div><div class="fn-p">2 tbsp (20g)</div></div><div class="fnums"><div class="fp">3g protein</div><div class="fk">95–100 kcal</div><div class="ff">7–8g fiber</div></div><div class="cnt"><button class="cb" onclick="add('chia',-1)">−</button><span class="cv" id="cv_chia">0</span><button class="cb" onclick="add('chia',1)">+</button></div></div>
+      <div class="fi" id="fi_peanuts"><div class="fn"><div class="fn-t">Peanuts / roasted chana</div><div class="fn-p">small handful (30g)</div></div><div class="fnums"><div class="fp">8g protein</div><div class="fk">160–175 kcal</div><div class="ff">2–3g fiber</div></div><div class="cnt"><button class="cb" onclick="add('peanuts',-1)">−</button><span class="cv" id="cv_peanuts">0</span><button class="cb" onclick="add('peanuts',1)">+</button></div></div>
+      <div class="fi" id="fi_pb"><div class="fn"><div class="fn-t">Peanut butter (natural)</div><div class="fn-p">2 tbsp (32g)</div></div><div class="fnums"><div class="fp">8g protein</div><div class="fk">185–200 kcal</div><div class="ff">2g fiber</div></div><div class="cnt"><button class="cb" onclick="add('pb',-1)">−</button><span class="cv" id="cv_pb">0</span><button class="cb" onclick="add('pb',1)">+</button></div></div>
+      <div class="fi" id="fi_almonds"><div class="fn"><div class="fn-t">Almonds</div><div class="fn-p">small handful (30g / ~20 almonds)</div></div><div class="fnums"><div class="fp">6g protein</div><div class="fk">170–180 kcal</div><div class="ff">2–3g fiber</div></div><div class="cnt"><button class="cb" onclick="add('almonds',-1)">−</button><span class="cv" id="cv_almonds">0</span><button class="cb" onclick="add('almonds',1)">+</button></div></div>
     </div>
   </div>
 
   <!-- NON-VEG -->
-  <div class="nonveg-section" id="nonveg-block">
-    <div class="section">
-      <div class="section-label">Eggs</div>
-      <div class="section-card">
-        <div class="food-item" id="fi_egg_whole"><div class="food-name"><div class="food-name-text">Whole egg (boiled / scrambled)</div><div class="food-portion">1 egg (50g)</div></div><span class="badge badge-complete">complete</span><div class="food-nums"><div class="food-protein-val">6g protein</div><div class="food-kcal-val">65–90 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('egg_whole',-1)">−</button><span class="cnt-val" id="cv_egg_whole">0</span><button class="cnt-btn" onclick="add('egg_whole',1)">+</button></div></div>
-        <div class="food-item" id="fi_egg_white"><div class="food-name"><div class="food-name-text">Egg whites only</div><div class="food-portion">2 egg whites</div></div><div class="food-nums"><div class="food-protein-val">7g protein</div><div class="food-kcal-val">30–35 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('egg_white',-1)">−</button><span class="cnt-val" id="cv_egg_white">0</span><button class="cnt-btn" onclick="add('egg_white',1)">+</button></div></div>
+  <div class="nv" id="nv-block">
+    <div class="sec" data-cat="nonveg">
+      <div class="sec-lbl">Eggs</div>
+      <div class="sec-card">
+        <div class="fi" id="fi_egg_whole"><div class="fn"><div class="fn-t">Whole egg (boiled / scrambled)</div><div class="fn-p">1 egg (50g)</div></div><span class="badge bc">complete</span><div class="fnums"><div class="fp">6g protein</div><div class="fk">65–90 kcal</div><div class="ff">0g fiber</div></div><div class="cnt"><button class="cb" onclick="add('egg_whole',-1)">−</button><span class="cv" id="cv_egg_whole">0</span><button class="cb" onclick="add('egg_whole',1)">+</button></div></div>
+        <div class="fi" id="fi_egg_white"><div class="fn"><div class="fn-t">Egg whites only</div><div class="fn-p">2 egg whites</div></div><div class="fnums"><div class="fp">7g protein</div><div class="fk">30–35 kcal</div><div class="ff">0g fiber</div></div><div class="cnt"><button class="cb" onclick="add('egg_white',-1)">−</button><span class="cv" id="cv_egg_white">0</span><button class="cb" onclick="add('egg_white',1)">+</button></div></div>
       </div>
     </div>
-    <div class="section">
-      <div class="section-label">Chicken</div>
-      <div class="section-card">
-        <div class="food-item" id="fi_chicken_breast"><div class="food-name"><div class="food-name-text">Chicken breast (cooked)</div><div class="food-portion">100g — 1 medium piece</div></div><span class="badge badge-best">best</span><div class="food-nums"><div class="food-protein-val">31g protein</div><div class="food-kcal-val">155–200 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('chicken_breast',-1)">−</button><span class="cnt-val" id="cv_chicken_breast">0</span><button class="cnt-btn" onclick="add('chicken_breast',1)">+</button></div></div>
-        <div class="food-item" id="fi_chicken_leg"><div class="food-name"><div class="food-name-text">Chicken leg / thigh (cooked)</div><div class="food-portion">1 piece (~100g)</div></div><div class="food-nums"><div class="food-protein-val">26g protein</div><div class="food-kcal-val">180–240 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('chicken_leg',-1)">−</button><span class="cnt-val" id="cv_chicken_leg">0</span><button class="cnt-btn" onclick="add('chicken_leg',1)">+</button></div></div>
-        <div class="food-item" id="fi_chicken_curry"><div class="food-name"><div class="food-name-text">Chicken curry (home-style)</div><div class="food-portion">1 katori with 2 pieces</div></div><div class="food-nums"><div class="food-protein-val">22g protein</div><div class="food-kcal-val">250–380 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('chicken_curry',-1)">−</button><span class="cnt-val" id="cv_chicken_curry">0</span><button class="cnt-btn" onclick="add('chicken_curry',1)">+</button></div></div>
+    <div class="sec" data-cat="nonveg">
+      <div class="sec-lbl">Chicken</div>
+      <div class="sec-card">
+        <div class="fi" id="fi_chicken_breast"><div class="fn"><div class="fn-t">Chicken breast (cooked)</div><div class="fn-p">100g — 1 medium piece</div></div><span class="badge bb">best</span><div class="fnums"><div class="fp">31g protein</div><div class="fk">155–200 kcal</div><div class="ff">0g fiber</div></div><div class="cnt"><button class="cb" onclick="add('chicken_breast',-1)">−</button><span class="cv" id="cv_chicken_breast">0</span><button class="cb" onclick="add('chicken_breast',1)">+</button></div></div>
+        <div class="fi" id="fi_chicken_leg"><div class="fn"><div class="fn-t">Chicken leg / thigh</div><div class="fn-p">1 piece (~100g)</div></div><div class="fnums"><div class="fp">26g protein</div><div class="fk">180–240 kcal</div><div class="ff">0g fiber</div></div><div class="cnt"><button class="cb" onclick="add('chicken_leg',-1)">−</button><span class="cv" id="cv_chicken_leg">0</span><button class="cb" onclick="add('chicken_leg',1)">+</button></div></div>
+        <div class="fi" id="fi_chicken_curry"><div class="fn"><div class="fn-t">Chicken curry (home-style)</div><div class="fn-p">1 katori with 2 pieces</div></div><div class="fnums"><div class="fp">22g protein</div><div class="fk">250–380 kcal</div><div class="ff">0–1g fiber</div></div><div class="cnt"><button class="cb" onclick="add('chicken_curry',-1)">−</button><span class="cv" id="cv_chicken_curry">0</span><button class="cb" onclick="add('chicken_curry',1)">+</button></div></div>
       </div>
     </div>
-    <div class="section">
-      <div class="section-label">Fish & seafood</div>
-      <div class="section-card">
-        <div class="food-item" id="fi_fish"><div class="food-name"><div class="food-name-text">Fish fillet — rohu / surmai / pomfret</div><div class="food-portion">100g — 1 medium piece</div></div><span class="badge badge-best">best</span><div class="food-nums"><div class="food-protein-val">22g protein</div><div class="food-kcal-val">100–170 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('fish',-1)">−</button><span class="cnt-val" id="cv_fish">0</span><button class="cnt-btn" onclick="add('fish',1)">+</button></div></div>
-        <div class="food-item" id="fi_tuna"><div class="food-name"><div class="food-name-text">Tuna (canned in water)</div><div class="food-portion">½ can (85g)</div></div><div class="food-nums"><div class="food-protein-val">20g protein</div><div class="food-kcal-val">80–100 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('tuna',-1)">−</button><span class="cnt-val" id="cv_tuna">0</span><button class="cnt-btn" onclick="add('tuna',1)">+</button></div></div>
-        <div class="food-item" id="fi_prawns"><div class="food-name"><div class="food-name-text">Prawns / jhinga (cooked)</div><div class="food-portion">100g — small bowl</div></div><div class="food-nums"><div class="food-protein-val">19g protein</div><div class="food-kcal-val">85–130 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('prawns',-1)">−</button><span class="cnt-val" id="cv_prawns">0</span><button class="cnt-btn" onclick="add('prawns',1)">+</button></div></div>
+    <div class="sec" data-cat="nonveg">
+      <div class="sec-lbl">Fish & seafood</div>
+      <div class="sec-card">
+        <div class="fi" id="fi_fish"><div class="fn"><div class="fn-t">Fish fillet — rohu / surmai / pomfret</div><div class="fn-p">100g — 1 medium piece</div></div><span class="badge bb">best</span><div class="fnums"><div class="fp">22g protein</div><div class="fk">100–170 kcal</div><div class="ff">0g fiber</div></div><div class="cnt"><button class="cb" onclick="add('fish',-1)">−</button><span class="cv" id="cv_fish">0</span><button class="cb" onclick="add('fish',1)">+</button></div></div>
+        <div class="fi" id="fi_tuna"><div class="fn"><div class="fn-t">Tuna (canned in water)</div><div class="fn-p">½ can (85g)</div></div><div class="fnums"><div class="fp">20g protein</div><div class="fk">80–100 kcal</div><div class="ff">0g fiber</div></div><div class="cnt"><button class="cb" onclick="add('tuna',-1)">−</button><span class="cv" id="cv_tuna">0</span><button class="cb" onclick="add('tuna',1)">+</button></div></div>
+        <div class="fi" id="fi_prawns"><div class="fn"><div class="fn-t">Prawns / jhinga (cooked)</div><div class="fn-p">100g — small bowl</div></div><div class="fnums"><div class="fp">19g protein</div><div class="fk">85–130 kcal</div><div class="ff">0g fiber</div></div><div class="cnt"><button class="cb" onclick="add('prawns',-1)">−</button><span class="cv" id="cv_prawns">0</span><button class="cb" onclick="add('prawns',1)">+</button></div></div>
       </div>
     </div>
-    <div class="section">
-      <div class="section-label">Mutton & others</div>
-      <div class="section-card">
-        <div class="food-item" id="fi_mutton"><div class="food-name"><div class="food-name-text">Mutton / lamb (cooked)</div><div class="food-portion">100g — 3–4 pieces</div></div><div class="food-nums"><div class="food-protein-val">25g protein</div><div class="food-kcal-val">200–290 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('mutton',-1)">−</button><span class="cnt-val" id="cv_mutton">0</span><button class="cnt-btn" onclick="add('mutton',1)">+</button></div></div>
-        <div class="food-item" id="fi_keema"><div class="food-name"><div class="food-name-text">Keema (cooked, any meat)</div><div class="food-portion">1 katori (100g)</div></div><div class="food-nums"><div class="food-protein-val">24g protein</div><div class="food-kcal-val">220–300 kcal</div></div><div class="counter"><button class="cnt-btn" onclick="add('keema',-1)">−</button><span class="cnt-val" id="cv_keema">0</span><button class="cnt-btn" onclick="add('keema',1)">+</button></div></div>
+    <div class="sec" data-cat="nonveg">
+      <div class="sec-lbl">Mutton & others</div>
+      <div class="sec-card">
+        <div class="fi" id="fi_mutton"><div class="fn"><div class="fn-t">Mutton / lamb (cooked)</div><div class="fn-p">100g — 3–4 pieces</div></div><div class="fnums"><div class="fp">25g protein</div><div class="fk">200–290 kcal</div><div class="ff">0g fiber</div></div><div class="cnt"><button class="cb" onclick="add('mutton',-1)">−</button><span class="cv" id="cv_mutton">0</span><button class="cb" onclick="add('mutton',1)">+</button></div></div>
+        <div class="fi" id="fi_keema"><div class="fn"><div class="fn-t">Keema (cooked, any meat)</div><div class="fn-p">1 katori (100g)</div></div><div class="fnums"><div class="fp">24g protein</div><div class="fk">220–300 kcal</div><div class="ff">0g fiber</div></div><div class="cnt"><button class="cb" onclick="add('keema',-1)">−</button><span class="cv" id="cv_keema">0</span><button class="cb" onclick="add('keema',1)">+</button></div></div>
       </div>
     </div>
   </div>
 
-  <!-- Calorie disclaimer -->
-  <div class="disclaimer">
-    <strong>About the calorie ranges:</strong> The lower number is for the ingredient cooked simply — boiled, grilled, or steamed. The higher number reflects home-style cooking with oil or ghee. Tadka, curry bases, and added fats are <em>not</em> counted here. Your actual calorie intake will be higher if cooking with oil.
+  <div class="disc">
+    <strong>Calorie & fiber ranges:</strong> Lower end = plain / boiled / steamed. Higher end = home-cooked with oil or ghee. Tadka, curry bases, and added fats are not included. Your actual intake will be higher if cooking with oil. Fiber varies with ripeness and cooking time.
   </div>
 
-  <div class="tip-box">
-    <strong>How to use this planner:</strong> Select a meal tab (breakfast, lunch, dinner, snacks) and tap + on what you plan to eat. Switch between meal tabs to build your full day. If your protein total is low, add seeds or dairy as small boosters. If you're already over your goal, reduce portions on lower-protein foods first.
+  <div class="tip">
+    <strong>How to plan:</strong> Pick a meal tab, tap + on what you plan to eat, then switch tabs to plan the next meal. If protein is short, boost with seeds or dairy. If calories are high, swap white rice for brown rice or add more vegetables. Type any food in the AI box to look up its nutrition instantly.
   </div>
 
 </div>
 
 <!-- Sticky bar -->
-<div class="sticky-bar">
+<div class="sticky">
   <div>
-    <div class="sticky-left-label">protein planned today</div>
-    <div style="display:flex;align-items:baseline;gap:5px">
-      <span class="sticky-total" id="sticky-protein">0g</span>
-      <span class="sticky-goal-txt">/ <span id="sticky-goal">90</span>g</span>
+    <div class="stl">protein planned</div>
+    <div style="display:flex;align-items:baseline;gap:4px">
+      <span class="stn" id="st-p">0g</span>
+      <span class="stg">/ <span id="st-goal">90</span>g</span>
     </div>
   </div>
-  <div class="sticky-right">
-    <div class="sticky-kcal" id="sticky-kcal">~0 kcal</div>
-    <div class="sticky-kcal-label">est. calories (before cooking fat)</div>
-    <div class="sticky-prog-wrap">
-      <div class="sticky-prog-fill" id="sticky-bar" style="width:0%"></div>
-    </div>
+  <div class="str">
+    <div class="stk" id="st-k">~0 kcal</div>
+    <div class="stfl" id="st-f">0g fiber</div>
+    <div class="spw"><div class="spf" id="sp-bar" style="width:0%"></div></div>
   </div>
 </div>
 
 <script>
-const foods = {
-  paneer:       { p:18, kLow:265, kHigh:330 },
-  greek:        { p:10, kLow:60,  kHigh:90  },
-  milk:         { p:8,  kLow:85,  kHigh:120 },
-  chena:        { p:11, kLow:70,  kHigh:100 },
-  soya:         { p:15, kLow:100, kHigh:140 },
-  channadal:    { p:14, kLow:190, kHigh:260 },
-  rajma:        { p:13, kLow:180, kHigh:250 },
-  chana:        { p:12, kLow:160, kHigh:230 },
-  moongdal:     { p:12, kLow:150, kHigh:210 },
-  masoor:       { p:12, kLow:150, kHigh:210 },
-  tofu:         { p:10, kLow:70,  kHigh:120 },
-  sprouts:      { p:7,  kLow:50,  kHigh:70  },
-  hemp:         { p:10, kLow:155, kHigh:175 },
-  pumpkin:      { p:5,  kLow:110, kHigh:125 },
-  flax:         { p:4,  kLow:100, kHigh:110 },
-  chia:         { p:3,  kLow:95,  kHigh:100 },
-  peanuts:      { p:8,  kLow:160, kHigh:175 },
-  pb:           { p:8,  kLow:185, kHigh:200 },
-  almonds:      { p:6,  kLow:170, kHigh:180 },
-  quinoa:       { p:8,  kLow:180, kHigh:220 },
-  oats:         { p:6,  kLow:145, kHigh:160 },
-  besan:        { p:6,  kLow:110, kHigh:130 },
-  egg_whole:    { p:6,  kLow:65,  kHigh:90  },
-  egg_white:    { p:7,  kLow:30,  kHigh:35  },
-  chicken_breast:{ p:31, kLow:155, kHigh:200 },
-  chicken_leg:  { p:26, kLow:180, kHigh:240 },
-  chicken_curry:{ p:22, kLow:250, kHigh:380 },
-  fish:         { p:22, kLow:100, kHigh:170 },
-  tuna:         { p:20, kLow:80,  kHigh:100 },
-  prawns:       { p:19, kLow:85,  kHigh:130 },
-  mutton:       { p:25, kLow:200, kHigh:290 },
-  keema:        { p:24, kLow:220, kHigh:300 }
+const FOODS = {
+  idli:{p:4,kl:90,kh:110,fl:1,fh:2},dosa:{p:4,kl:110,kh:160,fl:1,fh:2},
+  upma:{p:5,kl:180,kh:230,fl:2,fh:3},poha:{p:4,kl:160,kh:200,fl:2,fh:3},
+  paratha:{p:4,kl:180,kh:240,fl:2,fh:3},oats:{p:6,kl:145,kh:160,fl:4,fh:5},
+  besan_chilla:{p:12,kl:200,kh:260,fl:4,fh:5},
+  wheat_roti:{p:3,kl:70,kh:90,fl:1,fh:2},jowar_roti:{p:4,kl:90,kh:110,fl:2,fh:3},
+  bajra_roti:{p:4,kl:95,kh:115,fl:2,fh:3},ragi_roti:{p:4,kl:90,kh:110,fl:3,fh:4},
+  multigrain_roti:{p:4,kl:85,kh:105,fl:2,fh:3},besan_roti:{p:6,kl:120,kh:145,fl:3,fh:4},
+  white_rice:{p:4,kl:180,kh:210,fl:0,fh:1},brown_rice:{p:5,kl:170,kh:200,fl:2,fh:3},
+  red_rice:{p:5,kl:165,kh:195,fl:2,fh:3},poha_rice:{p:3,kl:140,kh:160,fl:1,fh:2},
+  khichdi:{p:9,kl:200,kh:260,fl:3,fh:5},quinoa:{p:8,kl:180,kh:220,fl:3,fh:4},
+  soya:{p:15,kl:100,kh:140,fl:2,fh:3},channadal:{p:14,kl:190,kh:260,fl:6,fh:8},
+  rajma:{p:13,kl:180,kh:250,fl:7,fh:9},chana:{p:12,kl:160,kh:230,fl:8,fh:10},
+  moongdal:{p:12,kl:150,kh:210,fl:5,fh:7},masoor:{p:12,kl:150,kh:210,fl:5,fh:7},
+  tofu:{p:10,kl:70,kh:120,fl:0,fh:1},sprouts:{p:7,kl:50,kh:70,fl:2,fh:3},
+  paneer:{p:18,kl:265,kh:330,fl:0,fh:0},greek:{p:10,kl:60,kh:90,fl:0,fh:0},
+  milk:{p:8,kl:85,kh:120,fl:0,fh:0},chena:{p:11,kl:70,kh:100,fl:0,fh:0},
+  palak:{p:3,kl:20,kh:35,fl:2,fh:3},gobi:{p:2,kl:25,kh:60,fl:2,fh:3},
+  bhindi:{p:2,kl:30,kh:70,fl:3,fh:4},gajar:{p:1,kl:35,kh:50,fl:2,fh:3},
+  lauki:{p:1,kl:15,kh:30,fl:1,fh:2},brinjal:{p:1,kl:25,kh:55,fl:2,fh:3},
+  methi:{p:4,kl:35,kh:50,fl:3,fh:4},matar:{p:5,kl:55,kh:75,fl:4,fh:5},
+  hemp:{p:10,kl:155,kh:175,fl:1,fh:2},pumpkin:{p:5,kl:110,kh:125,fl:1,fh:1},
+  flax:{p:4,kl:100,kh:110,fl:5,fh:6},chia:{p:3,kl:95,kh:100,fl:7,fh:8},
+  peanuts:{p:8,kl:160,kh:175,fl:2,fh:3},pb:{p:8,kl:185,kh:200,fl:2,fh:2},
+  almonds:{p:6,kl:170,kh:180,fl:2,fh:3},
+  egg_whole:{p:6,kl:65,kh:90,fl:0,fh:0},egg_white:{p:7,kl:30,kh:35,fl:0,fh:0},
+  chicken_breast:{p:31,kl:155,kh:200,fl:0,fh:0},chicken_leg:{p:26,kl:180,kh:240,fl:0,fh:0},
+  chicken_curry:{p:22,kl:250,kh:380,fl:0,fh:1},
+  fish:{p:22,kl:100,kh:170,fl:0,fh:0},tuna:{p:20,kl:80,kh:100,fl:0,fh:0},
+  prawns:{p:19,kl:85,kh:130,fl:0,fh:0},
+  mutton:{p:25,kl:200,kh:290,fl:0,fh:0},keema:{p:24,kl:220,kh:300,fl:0,fh:0}
 };
 
-const meals = ['breakfast','lunch','dinner','snack'];
-const counts = {};
-meals.forEach(m => {
-  counts[m] = {};
-  Object.keys(foods).forEach(k => counts[m][k] = 0);
-});
+const MEALS=['b','l','d','s'];
+const MEAL_CLS={b:'pb',l:'pl',d:'pd',s:'ps'};
+const counts={};
+MEALS.forEach(m=>{counts[m]={};Object.keys(FOODS).forEach(k=>counts[m][k]=0);});
+const customFoods={};
+const customCounts={};
+MEALS.forEach(m=>customCounts[m]={});
 
-let currentMeal = 'breakfast';
-let goal = 90;
+let curMeal='b', goal=90;
+let aiPending=null;
 
-const mealColors = {
-  breakfast: '#E76F00',
-  lunch: '#2D6A4F',
-  dinner: '#4338CA',
-  snack: '#7C3AED'
-};
-
-function setMeal(meal) {
-  currentMeal = meal;
-  meals.forEach(m => {
-    const tab = document.getElementById('tab-' + m);
-    tab.className = 'meal-tab';
-    if (m === meal) tab.classList.add('active-' + m);
+function setMeal(m){
+  curMeal=m;
+  MEALS.forEach(x=>{
+    const t=document.getElementById('tab-'+x);
+    t.className='tab';
+    if(x===m) t.classList.add('t'+x);
   });
-  Object.keys(foods).forEach(k => {
-    const fi = document.getElementById('fi_' + k);
-    const cv = document.getElementById('cv_' + k);
-    if (!fi || !cv) return;
-    cv.textContent = counts[meal][k];
-    fi.className = 'food-item';
-    if (counts[meal][k] > 0) {
-      fi.classList.add('planned');
-      fi.classList.add(meal + '-planned');
-    }
+  Object.keys(FOODS).forEach(k=>{
+    const cv=document.getElementById('cv_'+k);
+    if(cv) cv.textContent=counts[m][k];
+    const fi=document.getElementById('fi_'+k);
+    if(fi){fi.className='fi';if(counts[m][k]>0)fi.classList.add(MEAL_CLS[m]);}
+  });
+  Object.keys(customFoods).forEach(k=>{
+    const cv=document.getElementById('ccv_'+k);
+    if(cv) cv.textContent=customCounts[m][k]||0;
+    const fi=document.getElementById('cfi_'+k);
+    if(fi){fi.className='custom-item';if((customCounts[m][k]||0)>0)fi.classList.add(MEAL_CLS[m]);}
   });
 }
 
-function add(key, delta) {
-  counts[currentMeal][key] = Math.max(0, counts[currentMeal][key] + delta);
-  const cv = document.getElementById('cv_' + key);
-  if (cv) cv.textContent = counts[currentMeal][key];
-  const fi = document.getElementById('fi_' + key);
-  if (fi) {
-    fi.className = 'food-item';
-    if (counts[currentMeal][key] > 0) {
-      fi.classList.add('planned');
-      fi.classList.add(currentMeal + '-planned');
-    }
+function add(key,delta){
+  counts[curMeal][key]=Math.max(0,(counts[curMeal][key]||0)+delta);
+  const cv=document.getElementById('cv_'+key);
+  if(cv) cv.textContent=counts[curMeal][key];
+  const fi=document.getElementById('fi_'+key);
+  if(fi){fi.className='fi';if(counts[curMeal][key]>0)fi.classList.add(MEAL_CLS[curMeal]);}
+  recalc();
+}
+
+function addC(key,delta){
+  customCounts[curMeal][key]=Math.max(0,(customCounts[curMeal][key]||0)+delta);
+  const cv=document.getElementById('ccv_'+key);
+  if(cv) cv.textContent=customCounts[curMeal][key];
+  const fi=document.getElementById('cfi_'+key);
+  if(fi){fi.className='custom-item';if(customCounts[curMeal][key]>0)fi.classList.add(MEAL_CLS[curMeal]);}
+  recalc();
+}
+
+function getMealTotals(m){
+  let p=0,kl=0,kh=0,fl=0,fh=0;
+  Object.keys(FOODS).forEach(k=>{
+    const n=counts[m][k]||0;
+    if(n>0){p+=n*FOODS[k].p;kl+=n*FOODS[k].kl;kh+=n*FOODS[k].kh;fl+=n*FOODS[k].fl;fh+=n*FOODS[k].fh;}
+  });
+  Object.keys(customFoods).forEach(k=>{
+    const n=customCounts[m][k]||0;
+    if(n>0){const f=customFoods[k];p+=n*f.p;kl+=n*f.kl;kh+=n*f.kh;fl+=n*f.fl;fh+=n*f.fh;}
+  });
+  return{p,kl,kh,fl,fh};
+}
+
+function recalc(){
+  let tp=0,tkl=0,tkh=0,tfl=0,tfh=0;
+  MEALS.forEach(m=>{
+    const t=getMealTotals(m);
+    tp+=t.p;tkl+=t.kl;tkh+=t.kh;tfl+=t.fl;tfh+=t.fh;
+    document.getElementById('ms-p-'+m).textContent=t.p+'g';
+    document.getElementById('ms-k-'+m).textContent=t.kl>0?t.kl+'–'+t.kh+' kcal':'0 kcal';
+    document.getElementById('tsub-'+m).textContent=t.p+'g';
+    const dot=document.getElementById('mdot-'+m);
+    if(dot) dot.classList.toggle('on',t.p>0);
+  });
+  const pct=Math.min(100,Math.round(tp/goal*100));
+  document.getElementById('tot-p').innerHTML=tp+'<span style="font-size:12px;font-weight:400">g</span>';
+  document.getElementById('p-bar').style.width=pct+'%';
+  document.getElementById('p-bar').style.background=pct>=100?'#2D6A4F':pct>=60?'#52B788':'#E76F00';
+  const ps=document.getElementById('p-status');
+  if(tp===0) ps.textContent='Plan your meals below';
+  else if(pct<50) ps.textContent=pct+'% of goal — keep adding';
+  else if(pct<90) ps.textContent=pct+'% of goal — almost there!';
+  else if(pct<=115) ps.textContent='Goal reached — great plan!';
+  else ps.textContent='Over goal — consider adjusting';
+
+  document.getElementById('tot-k').textContent=tkl>0?'~'+tkl+'–'+tkh+' kcal':'0 kcal';
+  const kpct=Math.min(100,Math.round(tkh/2000*100));
+  document.getElementById('k-bar').style.width=kpct+'%';
+  document.getElementById('k-bar').style.background=kpct>90?'#B91C1C':kpct>60?'#E76F00':'#52B788';
+
+  document.getElementById('tot-f').innerHTML=tfl>0?tfl+'–'+tfh+'<span style="font-size:12px;font-weight:400">g</span>':'0<span style="font-size:12px;font-weight:400">g</span>';
+  const fpct=Math.min(100,Math.round(tfh/38*100));
+  document.getElementById('f-bar').style.width=fpct+'%';
+
+  document.getElementById('st-p').textContent=tp+'g';
+  document.getElementById('st-k').textContent=tkl>0?'~'+tkl+'–'+tkh+' kcal':'~0 kcal';
+  document.getElementById('st-f').textContent=tfl>0?tfl+'–'+tfh+'g fiber':'0g fiber';
+  document.getElementById('sp-bar').style.width=pct+'%';
+}
+
+function setGoal(v){
+  goal=parseInt(v);
+  document.getElementById('gval').textContent=goal+'g';
+  document.getElementById('st-goal').textContent=goal;
+  recalc();
+}
+
+function setMode(m){
+  document.getElementById('bveg').classList.toggle('active',m==='veg');
+  document.getElementById('bnv').classList.toggle('active',m==='nonveg');
+  document.getElementById('nv-block').classList.toggle('on',m==='nonveg');
+}
+
+function filterCat(cat,btn){
+  document.querySelectorAll('.cpill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.sec[data-cat]').forEach(s=>{
+    s.style.display=(cat==='all'||s.dataset.cat===cat)?'block':'none';
+  });
+  document.querySelector('.ai-box').style.display=
+    (cat==='all'||cat==='custom')?'block':'none';
+  const cs=document.getElementById('custom-sec');
+  if(cs) cs.style.display=(cat==='all'||cat==='custom')&&Object.keys(customFoods).length>0?'block':'none';
+}
+
+function resetMeal(){
+  Object.keys(FOODS).forEach(k=>{
+    counts[curMeal][k]=0;
+    const cv=document.getElementById('cv_'+k);if(cv)cv.textContent='0';
+    const fi=document.getElementById('fi_'+k);if(fi)fi.className='fi';
+  });
+  Object.keys(customFoods).forEach(k=>{
+    customCounts[curMeal][k]=0;
+    const cv=document.getElementById('ccv_'+k);if(cv)cv.textContent='0';
+    const fi=document.getElementById('cfi_'+k);if(fi)fi.className='custom-item';
+  });
+  recalc();
+}
+
+function resetAll(){
+  MEALS.forEach(m=>{
+    Object.keys(FOODS).forEach(k=>counts[m][k]=0);
+    Object.keys(customFoods).forEach(k=>customCounts[m][k]=0);
+  });
+  Object.keys(FOODS).forEach(k=>{
+    const cv=document.getElementById('cv_'+k);if(cv)cv.textContent='0';
+    const fi=document.getElementById('fi_'+k);if(fi)fi.className='fi';
+  });
+  Object.keys(customFoods).forEach(k=>{
+    const cv=document.getElementById('ccv_'+k);if(cv)cv.textContent='0';
+    const fi=document.getElementById('cfi_'+k);if(fi)fi.className='custom-item';
+  });
+  recalc();
+}
+
+/* AI ingredient lookup */
+async function aiLookup(){
+  const inp=document.getElementById('ai-input');
+  const q=inp.value.trim();
+  if(!q) return;
+  const btn=document.getElementById('ai-btn');
+  const loading=document.getElementById('ai-loading');
+  const err=document.getElementById('ai-err');
+  const result=document.getElementById('ai-result');
+  btn.disabled=true;
+  loading.classList.add('show');
+  err.classList.remove('show');
+  result.classList.remove('show');
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:400,
+        system:`You are a nutrition database for Indian foods. When given a food name, return ONLY a JSON object with these fields:
+- name: display name of the food (string)
+- portion: typical Indian portion description (string, e.g. "1 katori (150g)" or "1 roti (40g)")
+- protein: protein in grams per portion (number)
+- cal_low: lower calorie estimate per portion (number, plain/boiled/steamed)  
+- cal_high: higher calorie estimate per portion (number, cooked with oil/ghee)
+- fiber_low: lower fiber estimate in grams (number)
+- fiber_high: higher fiber estimate in grams (number)
+Return ONLY valid JSON. No explanation, no markdown.`,
+        messages:[{role:'user',content:`Nutrition data for: ${q}`}]
+      })
+    });
+    const data=await res.json();
+    const text=data.content?.[0]?.text||'';
+    const clean=text.replace(/```json|```/g,'').trim();
+    const parsed=JSON.parse(clean);
+    aiPending=parsed;
+    document.getElementById('ai-rname').textContent=parsed.name+' — '+parsed.portion;
+    document.getElementById('ai-rp').textContent=parsed.protein+'g';
+    document.getElementById('ai-rk').textContent=parsed.cal_low+'–'+parsed.cal_high+' kcal';
+    document.getElementById('ai-rf').textContent=parsed.fiber_low+'–'+parsed.fiber_high+'g';
+    document.getElementById('ai-rportion').textContent=parsed.portion;
+    result.classList.add('show');
+  }catch(e){
+    err.textContent='Could not look up this food. Try a different name or check your connection.';
+    err.classList.add('show');
   }
-  updateTotals();
+  loading.classList.remove('show');
+  btn.disabled=false;
 }
 
-function getMealTotals(meal) {
-  let p = 0, kLow = 0, kHigh = 0;
-  Object.keys(foods).forEach(k => {
-    const n = counts[meal][k];
-    if (n > 0) {
-      p += n * foods[k].p;
-      kLow += n * foods[k].kLow;
-      kHigh += n * foods[k].kHigh;
-    }
-  });
-  return { p, kLow, kHigh };
+function addCustom(){
+  if(!aiPending) return;
+  const key='custom_'+Date.now();
+  customFoods[key]={
+    name:aiPending.name,
+    portion:aiPending.portion,
+    p:aiPending.protein,
+    kl:aiPending.cal_low,
+    kh:aiPending.cal_high,
+    fl:aiPending.fiber_low,
+    fh:aiPending.fiber_high
+  };
+  MEALS.forEach(m=>customCounts[m][key]=0);
+  customCounts[curMeal][key]=1;
+  renderCustomItem(key);
+  const sec=document.getElementById('custom-sec');
+  sec.style.display='block';
+  document.getElementById('ai-result').classList.remove('show');
+  document.getElementById('ai-input').value='';
+  aiPending=null;
+  recalc();
 }
 
-function updateTotals() {
-  let totalP = 0, totalKLow = 0, totalKHigh = 0;
-  meals.forEach(m => {
-    const t = getMealTotals(m);
-    totalP += t.p;
-    totalKLow += t.kLow;
-    totalKHigh += t.kHigh;
-
-    document.getElementById('ps-' + m).textContent = t.p + 'g';
-    document.getElementById('pk-' + m).textContent = t.kLow > 0 ? t.kLow + '–' + t.kHigh : '0 kcal';
-    document.getElementById('tsub-' + m).textContent = t.p + 'g';
-
-    const dot = document.getElementById('mdot-' + m);
-    if (dot) dot.classList.toggle('show', t.p > 0);
-  });
-
-  const pct = Math.min(100, Math.round((totalP / goal) * 100));
-  document.getElementById('total-protein').innerHTML = totalP + '<span style="font-size:14px;font-weight:400">g</span>';
-  document.getElementById('protein-bar').style.width = pct + '%';
-  document.getElementById('protein-bar').style.background =
-    pct >= 100 ? '#2D6A4F' : pct >= 60 ? '#52B788' : '#E76F00';
-
-  let status = '';
-  if (totalP === 0) status = 'Start planning your meals below';
-  else if (pct < 50) status = pct + '% of goal — add more protein sources';
-  else if (pct < 90) status = pct + '% of goal — almost there!';
-  else if (pct <= 110) status = 'Goal reached! Great plan for today.';
-  else status = 'Over goal — consider adjusting portions';
-  document.getElementById('protein-status').textContent = status;
-
-  const kcalDisplay = totalKLow > 0 ? '~' + totalKLow + '–' + totalKHigh : '0';
-  document.getElementById('total-kcal').innerHTML = kcalDisplay + '<span style="font-size:14px;font-weight:400"> kcal</span>';
-
-  const kcalPct = Math.min(100, Math.round((totalKHigh / 2000) * 100));
-  document.getElementById('kcal-bar').style.width = kcalPct + '%';
-  document.getElementById('kcal-bar').style.background =
-    kcalPct > 90 ? '#C1121F' : kcalPct > 60 ? '#E76F00' : '#52B788';
-
-  document.getElementById('sticky-protein').textContent = totalP + 'g';
-  document.getElementById('sticky-kcal').textContent = totalKLow > 0 ? '~' + totalKLow + '–' + totalKHigh + ' kcal' : '~0 kcal';
-  document.getElementById('sticky-bar').style.width = pct + '%';
-}
-
-function updateGoal(val) {
-  goal = parseInt(val);
-  document.getElementById('goal-display').textContent = goal + 'g';
-  document.getElementById('sticky-goal').textContent = goal;
-  updateTotals();
-}
-
-function setMode(mode) {
-  document.getElementById('btn-veg').classList.toggle('active', mode === 'veg');
-  document.getElementById('btn-nonveg').classList.toggle('active', mode === 'nonveg');
-  document.getElementById('nonveg-block').classList.toggle('visible', mode === 'nonveg');
-}
-
-function resetMeal() {
-  Object.keys(foods).forEach(k => {
-    counts[currentMeal][k] = 0;
-    const cv = document.getElementById('cv_' + k);
-    if (cv) cv.textContent = '0';
-    const fi = document.getElementById('fi_' + k);
-    if (fi) { fi.className = 'food-item'; }
-  });
-  updateTotals();
-}
-
-function resetAll() {
-  meals.forEach(m => {
-    Object.keys(foods).forEach(k => counts[m][k] = 0);
-  });
-  Object.keys(foods).forEach(k => {
-    const cv = document.getElementById('cv_' + k);
-    if (cv) cv.textContent = '0';
-    const fi = document.getElementById('fi_' + k);
-    if (fi) fi.className = 'food-item';
-  });
-  updateTotals();
+function renderCustomItem(key){
+  const f=customFoods[key];
+  const card=document.getElementById('custom-card');
+  const div=document.createElement('div');
+  div.className='custom-item '+(customCounts[curMeal][key]>0?MEAL_CLS[curMeal]:'');
+  div.id='cfi_'+key;
+  div.innerHTML=`<div class="fn"><div class="fn-t">${f.name}</div><div class="fn-p">${f.portion}</div></div><div class="fnums"><div class="fp">${f.p}g protein</div><div class="fk">${f.kl}–${f.kh} kcal</div><div class="ff">${f.fl}–${f.fh}g fiber</div></div><div class="cnt"><button class="cb" onclick="addC('${key}',-1)">−</button><span class="cv" id="ccv_${key}">${customCounts[curMeal][key]}</span><button class="cb" onclick="addC('${key}',1)">+</button></div>`;
+  card.appendChild(div);
 }
 </script>
 </body>
