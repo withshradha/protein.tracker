@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Protein Tracker — Know Your Plate</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #2D6A4F;
+    --green-light: #D8F3DC;
+    --green-mid: #52B788;
+    --amber: #E76F00;
+    --amber-light: #FFF0E0;
+    --red: #C1121F;
+    --bg: #FAFAF7;
+    --card: #FFFFFF;
+    --border: rgba(0,0,0,0.08);
+    --text: #1A1A18;
+    --muted: #6B6B67;
+    --faint: #F0F0EC;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  header {
+    background: var(--green);
+    color: white;
+    padding: 28px 20px 24px;
+    text-align: center;
+  }
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: -0.3px;
+    margin-bottom: 4px;
+  }
+  header p {
+    font-size: 13px;
+    opacity: 0.75;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+  }
+
+  .container { max-width: 520px; margin: 0 auto; padding: 0 16px; }
+
+  /* Goal setter */
+  .goal-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin: 20px 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .goal-ring {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    flex-shrink: 0;
+  }
+  .goal-ring svg { transform: rotate(-90deg); }
+  .goal-ring-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .goal-ring-num { font-size: 18px; font-weight: 500; line-height: 1; }
+  .goal-ring-unit { font-size: 10px; color: var(--muted); margin-top: 2px; }
+  .goal-info { flex: 1; }
+  .goal-info label { font-size: 12px; color: var(--muted); display: block; margin-bottom: 6px; }
+  .goal-info input[type=range] {
+    width: 100%;
+    accent-color: var(--green);
+  }
+  .goal-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .goal-status {
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 6px;
+  }
+
+  /* Mode toggle */
+  .mode-toggle {
+    display: flex;
+    background: var(--faint);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 16px;
+    gap: 4px;
+  }
+  .mode-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 9px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    background: transparent;
+    color: var(--muted);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .mode-btn.active {
+    background: var(--card);
+    color: var(--text);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-green { background: var(--green); }
+  .dot-red { background: var(--red); }
+
+  /* Reset */
+  .top-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+  }
+  .reset-btn {
+    font-size: 12px;
+    color: var(--muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  /* Section */
+  .section { margin-bottom: 20px; }
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0 4px;
+    margin-bottom: 8px;
+  }
+  .section-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  /* Food item */
+  .food-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  .food-item:last-child { border-bottom: none; }
+  .food-item.logged { background: #F0FBF5; }
+  .food-name { flex: 1; min-width: 0; }
+  .food-name-text { font-size: 13px; font-weight: 400; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .food-portion { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .badge {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 20px;
+    font-weight: 500;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .badge-best { background: var(--green-light); color: var(--green); }
+  .badge-complete { background: #EEF2FF; color: #3730A3; }
+  .food-protein { font-size: 13px; font-weight: 500; color: var(--text); min-width: 30px; text-align: right; flex-shrink: 0; }
+  .counter { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+  .cnt-btn {
+    width: 26px; height: 26px; border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--faint);
+    font-size: 15px; line-height: 1;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+  .cnt-btn:active { background: var(--green-light); }
+  .cnt-val { font-size: 13px; font-weight: 500; min-width: 16px; text-align: center; color: var(--text); }
+
+  /* sticky footer bar */
+  .sticky-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--green);
+    color: white;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 100;
+  }
+  .sticky-bar-left { font-size: 13px; opacity: 0.8; }
+  .sticky-bar-num { font-size: 22px; font-weight: 500; font-family: 'DM Serif Display', serif; }
+  .sticky-bar-goal { font-size: 13px; opacity: 0.7; }
+  .sticky-progress {
+    width: 100px;
+    height: 6px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .sticky-fill {
+    height: 6px;
+    border-radius: 3px;
+    background: white;
+    transition: width 0.3s;
+  }
+
+  /* non-veg hidden by default */
+  .nonveg-section { display: none; }
+  .nonveg-section.visible { display: block; }
+
+  @media (max-width: 400px) {
+    header h1 { font-size: 24px; }
+    .food-name-text { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Know Your Plate</h1>
+  <p>Protein tracker — no weighing scale needed</p>
+</header>
+
+<div class="container">
+
+  <!-- Goal card -->
+  <div class="goal-card">
+    <div class="goal-ring">
+      <svg width="72" height="72" viewBox="0 0 72 72">
+        <circle cx="36" cy="36" r="30" fill="none" stroke="#E8F5E9" stroke-width="6"/>
+        <circle id="ring-circle" cx="36" cy="36" r="30" fill="none" stroke="#2D6A4F" stroke-width="6"
+          stroke-dasharray="188.5" stroke-dashoffset="188.5" stroke-linecap="round"/>
+      </svg>
+      <div class="goal-ring-text">
+        <div class="goal-ring-num" id="ring-num">0</div>
+        <div class="goal-ring-unit">/ <span id="ring-goal">90</span>g</div>
+      </div>
+    </div>
+    <div class="goal-info">
+      <label>My daily protein goal</label>
+      <input type="range" id="goal-slider" min="50" max="150" value="90" step="5" oninput="updateGoal(this.value)">
+      <div class="goal-meta">
+        <span>50g</span>
+        <span id="goal-display" style="font-weight:500;color:var(--green)">90g / day</span>
+        <span>150g</span>
+      </div>
+      <div class="goal-status" id="goal-status" style="color:var(--muted)">Start adding foods below</div>
+    </div>
+  </div>
+
+  <!-- Mode toggle -->
+  <div class="mode-toggle">
+    <button class="mode-btn active" id="btn-veg" onclick="setMode('veg')">
+      <span class="dot dot-green"></span> Vegetarian
+    </button>
+    <button class="mode-btn" id="btn-nonveg" onclick="setMode('nonveg')">
+      <span class="dot dot-red"></span> Non-vegetarian
+    </button>
+  </div>
+
+  <div class="top-row">
+    <button class="reset-btn" onclick="resetAll()">Reset all</button>
+  </div>
+
+  <!-- DAIRY -->
+  <div class="section">
+    <div class="section-label">Dairy</div>
+    <div class="section-card">
+      <div class="food-item" id="fi_paneer">
+        <div class="food-name">
+          <div class="food-name-text">Paneer</div>
+          <div class="food-portion">100g — approx ½ cup cubed / 4–5 pieces</div>
+        </div>
+        <span class="badge badge-best">best</span>
+        <div class="food-protein">18g</div>
+        <div class="counter">
+          <button class="cnt-btn" onclick="add('paneer',-1)">−</button>
+          <span class="cnt-val" id="cv_paneer">0</span>
+          <button class="cnt-btn" onclick="add('paneer',1)">+</button>
+        </div>
+      </div>
+      <div class="food-item" id="fi_greek">
+        <div class="food-name">
+          <div class="food-name-text">Greek yogurt / hung curd</div>
+          <div class="food-portion">100g — approx ½ cup / 1 small bowl</div>
+        </div>
+        <span class="badge badge-best">best</span>
+        <div class="food-protein">10g</div>
+        <div class="counter">
+          <button class="cnt-btn" onclick="add('greek',-1)">−</button>
+          <span class="cnt-val" id="cv_greek">0</span>
+          <button class="cnt-btn" onclick="add('greek',1)">+</button>
+        </div>
+      </div>
+      <div class="food-item" id="fi_milk">
+        <div class="food-name">
+          <div class="food-name-text">Toned / skimmed milk</div>
+          <div class="food-portion">1 glass = 250ml</div>
+        </div>
+        <div class="food-protein">8g</div>
+        <div class="counter">
+          <button class="cnt-btn" onclick="add('milk',-1)">−</button>
+          <span class="cnt-val" id="cv_milk">0</span>
+          <button class="cnt-btn" onclick="add('milk',1)">+</button>
+        </div>
+      </div>
+      <div class="food-item" id="fi_chena">
+        <div class="food-name">
+          <div class="food-name-text">Low-fat chena / cottage cheese</div>
+          <div class="food-portion">100g — approx ½ cup</div>
+        </div>
+        <div class="food-protein">11g</div>
+        <div class="counter">
+          <button class="cnt-btn" onclick="add('chena',-1)">−</button>
+          <span class="cnt-val" id="cv_chena">0</span>
+          <button class="cnt-btn" onclick="add('chena',1)">+</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEGUMES -->
+  <div class="section">
+    <div class="section-label">Legumes & pulses (cooked)</div>
+    <div class="section-card">
+      <div class="food-item" id="fi_soya">
+        <div class="food-name">
+          <div class="food-name-text">Soya chunks / nutrela</div>
+          <div class="food-portion">½ cup dry (30g) — triples when soaked</div>
+        </div>
+        <span class="badge badge-best">best</span>
+        <div class="food-protein">15g</div>
+        <div class="counter">
+          <button class="cnt-btn" onclick="add('soya',-1)">−</button>
+          <span class="cnt-val" id="cv_soya">0</span>
+          <button class="cnt-btn" onclick="add('soya',1)">+</button>
+        </div>
+      </div>
+      <div class="food-item" id="fi_channadal">
+        <div class="food-name">
+          <div class="food-name-text">Chana dal (cooked)</div>
+          <div class="food-portion">1 katori / 1 cup cooked</div>
+        </div>
+        <div class="food-protein">14g</div>
+        <div class="counter">
+          <button class="cnt-btn" onclick="add('channadal',-1)">−</button>
+          <span class="cnt-val" id="cv_channadal">0</span>
+          <button class="cnt-btn" onclick="add('channadal',1)">+</button>
+        </div>
+      </div>
+      <div class="food-item" id="fi_rajma">
+        <div class="food-name">
+          <div class="food-name-text">Rajma / kidney beans (cooked)</div>
+          <div class="food-portion">1 katori / 1 cup cooked</div>
+        </div>
+        <div class="food-protein">13g</div>
+        <div class="counter">
+          <button class="cnt-btn" onclick="add('rajma',-1)">−</button>
+          <span class="cnt-val" id="cv_rajma">0</span>
+          <button class="cnt-btn" onclick="add('rajma',1)">+</button>
+        </div>
+      </div>
+      <div class="food-item" id="fi_chana">
+        <div class="food-name">
+          <div class="food-name-text">Kala / kabuli chana (cooked)</div>
+          <div class="food-portion">1 katori / 1 cup cooked</div>
+        </div>
+        <div class="food-protein">12g</div>
+        <div class="counter">
+          <button class="cnt-btn" onclick="add('chana',-1)">−</button>
+          <span class="cnt-val" id="cv_chana">0</span>
+          <button class="cnt-btn" onclick="add('chana',1)">+</button>
+        </div>
+      </div>
+      <div class="food-item" id="fi_moongdal">
+        <div class="food-name">
+          <div class="food-name-text">Moong dal (cooked)</div>
+          <div class="food-portion">1 katori / 1 cup cooked</div>
+        </div>
+        <div class="food-protein">12g</div>
+        <div class="counter">
+          <button class="cnt-btn" onclick="add('moongdal',-1)">−</button>
+          <span class="cnt-val" id="cv_moongdal">0</span>
+          <button class="cnt-btn" onclick="add('moongdal',1)">+</button>
+        </div>
+      </div>
+      <div class="food-item" id="fi_masoor">
+        <div class="food-name">
+          <div class="food-name-text">Masoor dal (cooked)</div>
+          <div class="food-portion">1 katori / 1 cup cooked</div>
+        </div>
+        <div class="food-protein">12g</div>
+        <div class="counter">
+          <button class="cnt-btn" onclick="add('masoor',-1)">−</button>
+          <span class="cnt-val" id="cv_masoor">0</span>
+          <button class="cnt-btn" onclick="add('masoor',1)">+</button>
+        </div>
+      </div>
+      <div class="food-item" id="fi_tofu">
+        <div class="food-name">
+          <div class="food-name-text">Tofu (firm)</div>
+          <div class="food-portion">100g — approx ⅔ cup cubed</div>
+        </div>
+        <div class="food-protein">10g</div>
+        <div class="counter">
+          <button class="cnt-btn" onclick="add('tofu',-1)">−</button>
+          <span class="cnt-val" id="cv_tofu">0</span>
+          <button class="cnt-btn" onclick="add('tofu',1)">+</button>
+        </div>
+      </div>
+      <div class="food-item" id="fi_sprouts">
+        <div class="food-name">
+          <div class="food-name-text">Sprouted moong (raw)</div>
+          <div class="food-portion">1 cup / 1 small bowl</div>
+        </div>
+        <div class="food-protein">7g</div>
+        <div class="counter">
+          <button class="cnt-btn" onclick="add('sprouts',-1)">−</button>
+          <span class="cnt-val" id="cv_sprouts">0</span>
+          <button class="cnt-btn" onclick="add('sprouts',1)">+</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEEDS -->
+  <div class="section">
+    <div class="section-label">Seeds</div>
+    <div class="section-card">
+      <div class="food-item" id="fi_hemp">
+        <div class="food-name">
+          <div class="food-name-text">Hemp seeds</div>
+          <div class="food-portion">3 tbsp (30g)</div>
+        </div>
+        <span class="badge badge-best">best</span>
+        <div class="food-protein">10g</div>
+        <div class="counter">
+          <button class="cnt-btn" onclick="add('hemp',-1)">−</button>
+          <span class="cnt-val" id="cv_hemp">0</span>
+          <button class="cnt-btn" onclick="add('hemp',1)">+</button>
+        </div>
+      </div>
+      <div class="food-item" id="fi_pumpkin">
+        <div class="food-name">
+          <div class="food-name-text">Pumpkin seeds</div>
+          <div class="food-portion">2 tbsp (20g)</div>
+        </div>
+        <div class="food-protein">5g</div>
+        <div class="counter">
+          <button class="cnt-btn" onclick="add('pumpkin',-1)">−</button>
+          <span class="cnt-val" id="cv_pumpkin">0</span>
+          <button class="cnt-btn" onclick="add('pumpkin',1)">+</button>
+        </div>
+      </div>
+      <div class="food-item" id="fi_flax">
+        <div class="food-name">
+          <div class="food-name-text">Flaxseeds / alsi</div>
+          <div class="food-portion">2 tbsp (20g)</div>
+        </div>
+        <div class="food-protein">4g</div>
+        <div class="counter">
+          <button class="cnt-btn" onclick="add('flax',-1)">−</button>
+          <span class="cnt-val" id="cv_flax">0</span>
+          <button class="cnt-btn" onclick="add('flax',1)">+</button>
+        </div>
+      </div>
+      <div class="food-item" id="fi_chia">
+        <div class="food-name">
+          <div class="food-name-text">Chia seeds</div>
+          <div class="food-portion">2 tbsp (20g)</div>
+        </div>
+        <div class="food-protein">3g</div>
+        <div class="counter">
+          <button class="cnt-btn" onclick="add('chia',-1)">−</button>
+          <span class="cnt-val" id="cv_chia">0</span>
+          <button class="cnt-btn" onclick="add('chia',1)">+</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NUTS -->
+  <div class="section">
+    <div class="section-label">Nuts & nut butters</div>
+    <div class="section-card">
+      <div class="food-item" id="fi_peanuts">
+        <div class="food-name">
+          <div class="food-name-text">Peanuts / roasted chana</div>
+          <div class="food-portion">small handful (30g / ~25 peanuts)</div>
+        </div>
+        <div class="food-protein">8g</div>
+        <div class="counter">
+          <button class="cnt-btn" onclick="add('peanuts',-1)">−</button>
+          <span class="cnt-val" id="cv_peanuts">0</span>
+          <button class="cnt-btn" onclick="add('peanuts',1)">+</button>
+        </div>
+      </div>
+      <div class="food-item" id="fi_pb">
+        <div class="food-name">
+          <div class="food-name-text">Peanut butter (natural)</div>
+          <div class="food-portion">2 tbsp (32g)</div>
+        </div>
+        <div class="food-protein">8g</div>
+        <div class="counter">
+          <button class="cnt-btn" onclick="add('pb',-1)">−</button>
+          <span class="cnt-val" id="cv_pb">0</span>
+          <button class="cnt-btn" onclick="add('pb',1)">+</button>
+        </div>
+      </div>
+      <div class="food-item" id="fi_almonds">
+        <div class="food-name">
+          <div class="food-name-text">Almonds</div>
+          <div class="food-portion">small handful (30g / ~20 almonds)</div>
+        </div>
+        <div class="food-protein">6g</div>
+        <div class="counter">
+          <button class="cnt-btn" onclick="add('almonds',-1)">−</button>
+          <span class="cnt-val" id="cv_almonds">0</span>
+          <button class="cnt-btn" onclick="add('almonds',1)">+</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GRAINS -->
+  <div class="section">
+    <div class="section-label">Grains & flour</div>
+    <div class="section-card">
+      <div class="food-item" id="fi_quinoa">
+        <div class="food-name">
+          <div class="food-name-text">Quinoa (cooked)</div>
+          <div class="food-portion">1 cup cooked / 1 katori</div>
+        </div>
+        <span class="badge badge-complete">complete protein</span>
+        <div class="food-protein">8g</div>
+        <div class="counter">
+          <button class="cnt-btn" onclick="add('quinoa',-1)">−</button>
+          <span class="cnt-val" id="cv_quinoa">0</span>
+          <button class="cnt-btn" onclick="add('quinoa',1)">+</button>
+        </div>
+      </div>
+      <div class="food-item" id="fi_oats">
+        <div class="food-name">
+          <div class="food-name-text">Oats (rolled, dry)</div>
+          <div class="food-portion">½ cup dry (40g) — 1 standard bowl</div>
+        </div>
+        <div class="food-protein">6g</div>
+        <div class="counter">
+          <button class="cnt-btn" onclick="add('oats',-1)">−</button>
+          <span class="cnt-val" id="cv_oats">0</span>
+          <button class="cnt-btn" onclick="add('oats',1)">+</button>
+        </div>
+      </div>
+      <div class="food-item" id="fi_besan">
+        <div class="food-name">
+          <div class="food-name-text">Besan / chickpea flour</div>
+          <div class="food-portion">¼ cup (30g) — 2–3 chillas</div>
+        </div>
+        <div class="food-protein">6g</div>
+        <div class="counter">
+          <button class="cnt-btn" onclick="add('besan',-1)">−</button>
+          <span class="cnt-val" id="cv_besan">0</span>
+          <button class="cnt-btn" onclick="add('besan',1)">+</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NON-VEG SECTION -->
+  <div class="nonveg-section" id="nonveg-block">
+    <div class="section">
+      <div class="section-label">Eggs</div>
+      <div class="section-card">
+        <div class="food-item" id="fi_egg_whole">
+          <div class="food-name">
+            <div class="food-name-text">Whole egg (boiled / scrambled)</div>
+            <div class="food-portion">1 egg (50g)</div>
+          </div>
+          <span class="badge badge-complete">complete protein</span>
+          <div class="food-protein">6g</div>
+          <div class="counter">
+            <button class="cnt-btn" onclick="add('egg_whole',-1)">−</button>
+            <span class="cnt-val" id="cv_egg_whole">0</span>
+            <button class="cnt-btn" onclick="add('egg_whole',1)">+</button>
+          </div>
+        </div>
+        <div class="food-item" id="fi_egg_white">
+          <div class="food-name">
+            <div class="food-name-text">Egg whites only</div>
+            <div class="food-portion">2 egg whites</div>
+          </div>
+          <div class="food-protein">7g</div>
+          <div class="counter">
+            <button class="cnt-btn" onclick="add('egg_white',-1)">−</button>
+            <span class="cnt-val" id="cv_egg_white">0</span>
+            <button class="cnt-btn" onclick="add('egg_white',1)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Chicken</div>
+      <div class="section-card">
+        <div class="food-item" id="fi_chicken_breast">
+          <div class="food-name">
+            <div class="food-name-text">Chicken breast (cooked)</div>
+            <div class="food-portion">100g — 1 medium piece</div>
+          </div>
+          <span class="badge badge-best">best</span>
+          <div class="food-protein">31g</div>
+          <div class="counter">
+            <button class="cnt-btn" onclick="add('chicken_breast',-1)">−</button>
+            <span class="cnt-val" id="cv_chicken_breast">0</span>
+            <button class="cnt-btn" onclick="add('chicken_breast',1)">+</button>
+          </div>
+        </div>
+        <div class="food-item" id="fi_chicken_leg">
+          <div class="food-name">
+            <div class="food-name-text">Chicken leg / thigh (cooked)</div>
+            <div class="food-portion">1 piece (~100g)</div>
+          </div>
+          <div class="food-protein">26g</div>
+          <div class="counter">
+            <button class="cnt-btn" onclick="add('chicken_leg',-1)">−</button>
+            <span class="cnt-val" id="cv_chicken_leg">0</span>
+            <button class="cnt-btn" onclick="add('chicken_leg',1)">+</button>
+          </div>
+        </div>
+        <div class="food-item" id="fi_chicken_curry">
+          <div class="food-name">
+            <div class="food-name-text">Chicken curry (home-style)</div>
+            <div class="food-portion">1 katori with 2 pieces</div>
+          </div>
+          <div class="food-protein">22g</div>
+          <div class="counter">
+            <button class="cnt-btn" onclick="add('chicken_curry',-1)">−</button>
+            <span class="cnt-val" id="cv_chicken_curry">0</span>
+            <button class="cnt-btn" onclick="add('chicken_curry',1)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Fish & seafood</div>
+      <div class="section-card">
+        <div class="food-item" id="fi_fish">
+          <div class="food-name">
+            <div class="food-name-text">Fish fillet — rohu / surmai / pomfret</div>
+            <div class="food-portion">100g — 1 medium piece</div>
+          </div>
+          <span class="badge badge-best">best</span>
+          <div class="food-protein">22g</div>
+          <div class="counter">
+            <button class="cnt-btn" onclick="add('fish',-1)">−</button>
+            <span class="cnt-val" id="cv_fish">0</span>
+            <button class="cnt-btn" onclick="add('fish',1)">+</button>
+          </div>
+        </div>
+        <div class="food-item" id="fi_tuna">
+          <div class="food-name">
+            <div class="food-name-text">Tuna (canned in water)</div>
+            <div class="food-portion">½ can (85g)</div>
+          </div>
+          <div class="food-protein">20g</div>
+          <div class="counter">
+            <button class="cnt-btn" onclick="add('tuna',-1)">−</button>
+            <span class="cnt-val" id="cv_tuna">0</span>
+            <button class="cnt-btn" onclick="add('tuna',1)">+</button>
+          </div>
+        </div>
+        <div class="food-item" id="fi_prawns">
+          <div class="food-name">
+            <div class="food-name-text">Prawns / jhinga (cooked)</div>
+            <div class="food-portion">100g — small bowl</div>
+          </div>
+          <div class="food-protein">19g</div>
+          <div class="counter">
+            <button class="cnt-btn" onclick="add('prawns',-1)">−</button>
+            <span class="cnt-val" id="cv_prawns">0</span>
+            <button class="cnt-btn" onclick="add('prawns',1)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Mutton & others</div>
+      <div class="section-card">
+        <div class="food-item" id="fi_mutton">
+          <div class="food-name">
+            <div class="food-name-text">Mutton / lamb (cooked)</div>
+            <div class="food-portion">100g — 3–4 pieces</div>
+          </div>
+          <div class="food-protein">25g</div>
+          <div class="counter">
+            <button class="cnt-btn" onclick="add('mutton',-1)">−</button>
+            <span class="cnt-val" id="cv_mutton">0</span>
+            <button class="cnt-btn" onclick="add('mutton',1)">+</button>
+          </div>
+        </div>
+        <div class="food-item" id="fi_keema">
+          <div class="food-name">
+            <div class="food-name-text">Keema (cooked, any meat)</div>
+            <div class="food-portion">1 katori (100g)</div>
+          </div>
+          <div class="food-protein">24g</div>
+          <div class="counter">
+            <button class="cnt-btn" onclick="add('keema',-1)">−</button>
+            <span class="cnt-val" id="cv_keema">0</span>
+            <button class="cnt-btn" onclick="add('keema',1)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- tip -->
+  <div style="background:var(--green-light);border-radius:12px;padding:14px 16px;margin-bottom:80px;font-size:12px;color:var(--green);line-height:1.6;">
+    <strong>How to use:</strong> Tap + for every serving you eat during the day. Each + counts as one serving of that portion size shown. No weighing needed — just eyeball it using the serving description.
+  </div>
+
+</div>
+
+<!-- Sticky footer -->
+<div class="sticky-bar">
+  <div>
+    <div class="sticky-bar-left">total protein today</div>
+    <div style="display:flex;align-items:baseline;gap:6px;">
+      <span class="sticky-bar-num" id="footer-total">0g</span>
+      <span class="sticky-bar-goal">/ <span id="footer-goal">90</span>g goal</span>
+    </div>
+  </div>
+  <div style="text-align:right">
+    <div style="font-size:11px;opacity:0.7;margin-bottom:4px;" id="footer-pct">0%</div>
+    <div class="sticky-progress">
+      <div class="sticky-fill" id="footer-bar" style="width:0%"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const proteins = {
+    paneer:18, greek:10, milk:8, chena:11,
+    soya:15, channadal:14, rajma:13, chana:12, moongdal:12, masoor:12, tofu:10, sprouts:7,
+    hemp:10, pumpkin:5, flax:4, chia:3,
+    peanuts:8, pb:8, almonds:6,
+    quinoa:8, oats:6, besan:6,
+    egg_whole:6, egg_white:7,
+    chicken_breast:31, chicken_leg:26, chicken_curry:22,
+    fish:22, tuna:20, prawns:19,
+    mutton:25, keema:24
+  };
+
+  const counts = {};
+  Object.keys(proteins).forEach(k => counts[k] = 0);
+  let goal = 90;
+
+  function add(key, delta) {
+    counts[key] = Math.max(0, counts[key] + delta);
+    document.getElementById('cv_' + key).textContent = counts[key];
+    const el = document.getElementById('fi_' + key);
+    if (el) el.classList.toggle('logged', counts[key] > 0);
+    updateTotal();
+  }
+
+  function updateTotal() {
+    let total = 0;
+    Object.keys(proteins).forEach(k => { total += counts[k] * proteins[k]; });
+    const pct = Math.min(100, Math.round((total / goal) * 100));
+    const circ = 188.5;
+    const offset = circ - (circ * pct / 100);
+
+    document.getElementById('ring-num').textContent = total;
+    document.getElementById('ring-circle').style.strokeDashoffset = offset;
+    document.getElementById('ring-circle').style.stroke = pct >= 100 ? '#52B788' : pct >= 60 ? '#2D6A4F' : '#E76F00';
+
+    document.getElementById('footer-total').textContent = total + 'g';
+    document.getElementById('footer-bar').style.width = pct + '%';
+    document.getElementById('footer-pct').textContent = pct + '% of goal';
+
+    const statusEl = document.getElementById('goal-status');
+    if (total === 0) { statusEl.textContent = 'Start adding foods below'; statusEl.style.color = 'var(--muted)'; }
+    else if (pct < 50) { statusEl.textContent = total + 'g logged — keep going!'; statusEl.style.color = 'var(--amber)'; }
+    else if (pct < 100) { statusEl.textContent = total + 'g logged — almost there!'; statusEl.style.color = 'var(--green)'; }
+    else { statusEl.textContent = 'Goal reached! Great work today.'; statusEl.style.color = 'var(--green)'; }
+  }
+
+  function updateGoal(val) {
+    goal = parseInt(val);
+    document.getElementById('goal-display').textContent = goal + 'g / day';
+    document.getElementById('ring-goal').textContent = goal;
+    document.getElementById('footer-goal').textContent = goal;
+    updateTotal();
+  }
+
+  function setMode(mode) {
+    document.getElementById('btn-veg').classList.toggle('active', mode === 'veg');
+    document.getElementById('btn-nonveg').classList.toggle('active', mode === 'nonveg');
+    document.getElementById('nonveg-block').classList.toggle('visible', mode === 'nonveg');
+  }
+
+  function resetAll() {
+    Object.keys(counts).forEach(k => {
+      counts[k] = 0;
+      const cv = document.getElementById('cv_' + k);
+      if (cv) cv.textContent = '0';
+      const fi = document.getElementById('fi_' + k);
+      if (fi) fi.classList.remove('logged');
+    });
+    updateTotal();
+  }
+</script>
+</body>
+</html>
